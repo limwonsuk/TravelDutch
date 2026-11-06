@@ -1,23 +1,143 @@
 import { TripData, Member, ItineraryItem, Expense, ExpenseSplit } from '@/types';
 import { calculateEvenSplits } from './settlement';
 
-// Version 2 storage key to ensure fresh initial load with new default members
-const STORAGE_KEY = 'travel_dutch_trip_data_v2';
+// Version 3 storage key to ensure fresh initial load with new default schedule and expenses
+const STORAGE_KEY = 'travel_dutch_trip_data_v3';
 
-// Initial default data: 3 members (주연, 혜림, 용덕), zero default itinerary, zero default expenses
+// Initial default data: 3 members (주연, 혜림, 용덕), 태안 갯벌 캠핑 일정, 7건의 지출 내역
 export const INITIAL_TRIP_DATA: TripData = {
-  id: 'trip-default-1',
-  title: '우정 여행 플래너',
+  id: 'trip-taean-camping-1',
+  title: '태안 갯벌 캠핑 우정 여행',
   startDate: '2026-11-06',
-  endDate: '2026-11-09',
+  endDate: '2026-11-07',
   currency: 'KRW',
   members: [
-    { id: 'm-1', tripId: 'trip-default-1', name: '주연', avatarColor: '#EC4899', avatarEmoji: '🌸' },
-    { id: 'm-2', tripId: 'trip-default-1', name: '혜림', avatarColor: '#3B82F6', avatarEmoji: '🌟' },
-    { id: 'm-3', tripId: 'trip-default-1', name: '용덕', avatarColor: '#10B981', avatarEmoji: '🚀' },
+    { id: 'm-1', tripId: 'trip-taean-camping-1', name: '주연', avatarColor: '#EC4899', avatarEmoji: '🌸' },
+    { id: 'm-2', tripId: 'trip-taean-camping-1', name: '혜림', avatarColor: '#3B82F6', avatarEmoji: '🌟' },
+    { id: 'm-3', tripId: 'trip-taean-camping-1', name: '용덕', avatarColor: '#10B981', avatarEmoji: '🚀' },
   ],
-  itineraryItems: [],
-  expenses: [],
+  itineraryItems: [
+    {
+      id: 'itin-taean-1',
+      tripId: 'trip-taean-camping-1',
+      dayNumber: 1,
+      orderIndex: 1,
+      title: '태안 갯벌 캠핑',
+      category: '기타',
+      time: '14:00',
+      memo: '몽산포 갯벌 해루질 체험 및 오토 캠핑 사이트 구축',
+      lat: 36.6853,
+      lng: 126.2842,
+      estimatedCost: 256460,
+    },
+  ],
+  expenses: [
+    {
+      id: 'exp-1',
+      tripId: 'trip-taean-camping-1',
+      title: '미리준비 맥주',
+      amount: 31720,
+      category: '식비',
+      payerId: 'm-3', // 용덕
+      payer: { id: 'm-3', tripId: 'trip-taean-camping-1', name: '용덕', avatarColor: '#10B981', avatarEmoji: '🚀' },
+      createdAt: '2026-11-06T10:00:00Z',
+      splits: [
+        { id: 's-1-1', expenseId: 'exp-1', memberId: 'm-1', amount: 10580, member: { id: 'm-1', tripId: 'trip-taean-camping-1', name: '주연', avatarColor: '#EC4899', avatarEmoji: '🌸' } },
+        { id: 's-1-2', expenseId: 'exp-1', memberId: 'm-2', amount: 10570, member: { id: 'm-2', tripId: 'trip-taean-camping-1', name: '혜림', avatarColor: '#3B82F6', avatarEmoji: '🌟' } },
+        { id: 's-1-3', expenseId: 'exp-1', memberId: 'm-3', amount: 10570, member: { id: 'm-3', tripId: 'trip-taean-camping-1', name: '용덕', avatarColor: '#10B981', avatarEmoji: '🚀' } },
+      ],
+    },
+    {
+      id: 'exp-2',
+      tripId: 'trip-taean-camping-1',
+      title: '식비',
+      amount: 224710,
+      category: '식비',
+      payerId: 'm-3', // 용덕
+      payer: { id: 'm-3', tripId: 'trip-taean-camping-1', name: '용덕', avatarColor: '#10B981', avatarEmoji: '🚀' },
+      createdAt: '2026-11-06T12:30:00Z',
+      splits: [
+        { id: 's-2-1', expenseId: 'exp-2', memberId: 'm-1', amount: 74910, member: { id: 'm-1', tripId: 'trip-taean-camping-1', name: '주연', avatarColor: '#EC4899', avatarEmoji: '🌸' } },
+        { id: 's-2-2', expenseId: 'exp-2', memberId: 'm-2', amount: 74900, member: { id: 'm-2', tripId: 'trip-taean-camping-1', name: '혜림', avatarColor: '#3B82F6', avatarEmoji: '🌟' } },
+        { id: 's-2-3', expenseId: 'exp-2', memberId: 'm-3', amount: 74900, member: { id: 'm-3', tripId: 'trip-taean-camping-1', name: '용덕', avatarColor: '#10B981', avatarEmoji: '🚀' } },
+      ],
+    },
+    {
+      id: 'exp-3',
+      tripId: 'trip-taean-camping-1',
+      title: '체험비',
+      amount: 256460,
+      category: '기타',
+      payerId: 'm-3', // 용덕
+      payer: { id: 'm-3', tripId: 'trip-taean-camping-1', name: '용덕', avatarColor: '#10B981', avatarEmoji: '🚀' },
+      createdAt: '2026-11-06T14:00:00Z',
+      splits: [
+        { id: 's-3-1', expenseId: 'exp-3', memberId: 'm-1', amount: 85500, member: { id: 'm-1', tripId: 'trip-taean-camping-1', name: '주연', avatarColor: '#EC4899', avatarEmoji: '🌸' } },
+        { id: 's-3-2', expenseId: 'exp-3', memberId: 'm-2', amount: 85480, member: { id: 'm-2', tripId: 'trip-taean-camping-1', name: '혜림', avatarColor: '#3B82F6', avatarEmoji: '🌟' } },
+        { id: 's-3-3', expenseId: 'exp-3', memberId: 'm-3', amount: 85480, member: { id: 'm-3', tripId: 'trip-taean-camping-1', name: '용덕', avatarColor: '#10B981', avatarEmoji: '🚀' } },
+      ],
+    },
+    {
+      id: 'exp-4',
+      tripId: 'trip-taean-camping-1',
+      title: '매점',
+      amount: 132830,
+      category: '기타',
+      payerId: 'm-3', // 용덕
+      payer: { id: 'm-3', tripId: 'trip-taean-camping-1', name: '용덕', avatarColor: '#10B981', avatarEmoji: '🚀' },
+      createdAt: '2026-11-06T16:00:00Z',
+      splits: [
+        { id: 's-4-1', expenseId: 'exp-4', memberId: 'm-1', amount: 44290, member: { id: 'm-1', tripId: 'trip-taean-camping-1', name: '주연', avatarColor: '#EC4899', avatarEmoji: '🌸' } },
+        { id: 's-4-2', expenseId: 'exp-4', memberId: 'm-2', amount: 44270, member: { id: 'm-2', tripId: 'trip-taean-camping-1', name: '혜림', avatarColor: '#3B82F6', avatarEmoji: '🌟' } },
+        { id: 's-4-3', expenseId: 'exp-4', memberId: 'm-3', amount: 44270, member: { id: 'm-3', tripId: 'trip-taean-camping-1', name: '용덕', avatarColor: '#10B981', avatarEmoji: '🚀' } },
+      ],
+    },
+    {
+      id: 'exp-5',
+      tripId: 'trip-taean-camping-1',
+      title: '매점',
+      amount: 144000,
+      category: '기타',
+      payerId: 'm-3', // 용덕
+      payer: { id: 'm-3', tripId: 'trip-taean-camping-1', name: '용덕', avatarColor: '#10B981', avatarEmoji: '🚀' },
+      createdAt: '2026-11-06T18:00:00Z',
+      splits: [
+        { id: 's-5-1', expenseId: 'exp-5', memberId: 'm-1', amount: 48000, member: { id: 'm-1', tripId: 'trip-taean-camping-1', name: '주연', avatarColor: '#EC4899', avatarEmoji: '🌸' } },
+        { id: 's-5-2', expenseId: 'exp-5', memberId: 'm-2', amount: 48000, member: { id: 'm-2', tripId: 'trip-taean-camping-1', name: '혜림', avatarColor: '#3B82F6', avatarEmoji: '🌟' } },
+        { id: 's-5-3', expenseId: 'exp-5', memberId: 'm-3', amount: 48000, member: { id: 'm-3', tripId: 'trip-taean-camping-1', name: '용덕', avatarColor: '#10B981', avatarEmoji: '🚀' } },
+      ],
+    },
+    {
+      id: 'exp-6',
+      tripId: 'trip-taean-camping-1',
+      title: '마트',
+      amount: 229600,
+      category: '기타',
+      payerId: 'm-2', // 혜림
+      payer: { id: 'm-2', tripId: 'trip-taean-camping-1', name: '혜림', avatarColor: '#3B82F6', avatarEmoji: '🌟' },
+      createdAt: '2026-11-06T19:30:00Z',
+      splits: [
+        { id: 's-6-1', expenseId: 'exp-6', memberId: 'm-1', amount: 76540, member: { id: 'm-1', tripId: 'trip-taean-camping-1', name: '주연', avatarColor: '#EC4899', avatarEmoji: '🌸' } },
+        { id: 's-6-2', expenseId: 'exp-6', memberId: 'm-2', amount: 76530, member: { id: 'm-2', tripId: 'trip-taean-camping-1', name: '혜림', avatarColor: '#3B82F6', avatarEmoji: '🌟' } },
+        { id: 's-6-3', expenseId: 'exp-6', memberId: 'm-3', amount: 76530, member: { id: 'm-3', tripId: 'trip-taean-camping-1', name: '용덕', avatarColor: '#10B981', avatarEmoji: '🚀' } },
+      ],
+    },
+    {
+      id: 'exp-7',
+      tripId: 'trip-taean-camping-1',
+      title: '마트',
+      amount: 32000,
+      category: '기타',
+      payerId: 'm-1', // 주연
+      payer: { id: 'm-1', tripId: 'trip-taean-camping-1', name: '주연', avatarColor: '#EC4899', avatarEmoji: '🌸' },
+      createdAt: '2026-11-06T20:30:00Z',
+      splits: [
+        { id: 's-7-1', expenseId: 'exp-7', memberId: 'm-1', amount: 10680, member: { id: 'm-1', tripId: 'trip-taean-camping-1', name: '주연', avatarColor: '#EC4899', avatarEmoji: '🌸' } },
+        { id: 's-7-2', expenseId: 'exp-7', memberId: 'm-2', amount: 10660, member: { id: 'm-2', tripId: 'trip-taean-camping-1', name: '혜림', avatarColor: '#3B82F6', avatarEmoji: '🌟' } },
+        { id: 's-7-3', expenseId: 'exp-7', memberId: 'm-3', amount: 10660, member: { id: 'm-3', tripId: 'trip-taean-camping-1', name: '용덕', avatarColor: '#10B981', avatarEmoji: '🚀' } },
+      ],
+    },
+  ],
 };
 
 export function getTrip(): TripData {
