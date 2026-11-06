@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react';
 import { TripData, Member } from '@/types';
+import { addMember, deleteMember } from '@/lib/storage';
 import { Calendar, Users, Wallet, Plus, Trash2, X, Compass, DollarSign, Check } from 'lucide-react';
 
 interface HeaderProps {
@@ -37,27 +38,15 @@ export default function Header({ trip, activeTab, setActiveTab, onRefresh }: Hea
     return '3박 4일';
   }, [trip.startDate, trip.endDate]);
 
-  const handleAddMember = async (e: React.FormEvent) => {
+  const handleAddMember = (e: React.FormEvent) => {
     e.preventDefault();
     if (!newMemberName.trim()) return;
 
     setIsSubmitting(true);
     try {
-      const res = await fetch('/api/members', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          tripId: trip.id,
-          name: newMemberName.trim(),
-          avatarEmoji: selectedEmoji,
-          avatarColor: selectedColor,
-        }),
-      });
-
-      if (res.ok) {
-        setNewMemberName('');
-        onRefresh();
-      }
+      addMember(newMemberName.trim(), selectedColor, selectedEmoji);
+      setNewMemberName('');
+      onRefresh();
     } catch (err) {
       console.error(err);
     } finally {
@@ -65,7 +54,7 @@ export default function Header({ trip, activeTab, setActiveTab, onRefresh }: Hea
     }
   };
 
-  const handleDeleteMember = async (memberId: string, memberName: string) => {
+  const handleDeleteMember = (memberId: string, memberName: string) => {
     if (trip.members.length <= 1) {
       alert('최소 1명의 동행자가 있어야 합니다.');
       return;
@@ -75,12 +64,8 @@ export default function Header({ trip, activeTab, setActiveTab, onRefresh }: Hea
     }
 
     try {
-      const res = await fetch(`/api/members/${memberId}`, {
-        method: 'DELETE',
-      });
-      if (res.ok) {
-        onRefresh();
-      }
+      deleteMember(memberId);
+      onRefresh();
     } catch (err) {
       console.error(err);
     }

@@ -3,6 +3,7 @@
 import React, { useState, useMemo } from 'react';
 import dynamic from 'next/dynamic';
 import { TripData, ItineraryItem, BUSAN_PRESETS } from '@/types';
+import { addItineraryItem, deleteItineraryItem, reorderItineraryItem } from '@/lib/storage';
 import {
   Calendar,
   Clock,
@@ -105,36 +106,30 @@ export default function MapView({ trip, onRefresh }: MapViewProps) {
   };
 
   // Add Item
-  const handleAddItem = async (e: React.FormEvent) => {
+  const handleAddItem = (e: React.FormEvent) => {
     e.preventDefault();
     if (!title.trim()) return;
 
     setIsSubmitting(true);
     try {
-      const res = await fetch('/api/itinerary', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          tripId: trip.id,
-          dayNumber: modalDay,
-          title: title.trim(),
-          category,
-          time,
-          memo: memo.trim(),
-          lat: parseFloat(lat) || 35.1587,
-          lng: parseFloat(lng) || 129.1604,
-          estimatedCost: parseInt(estimatedCost) || 0,
-        }),
+      addItineraryItem({
+        tripId: trip.id,
+        dayNumber: modalDay,
+        title: title.trim(),
+        category,
+        time,
+        memo: memo.trim(),
+        lat: parseFloat(lat) || 35.1587,
+        lng: parseFloat(lng) || 129.1604,
+        estimatedCost: parseInt(estimatedCost) || 0,
       });
 
-      if (res.ok) {
-        setIsAddModalOpen(false);
-        setTitle('');
-        setMemo('');
-        setEstimatedCost('0');
-        setSelectedDay(modalDay);
-        onRefresh();
-      }
+      setIsAddModalOpen(false);
+      setTitle('');
+      setMemo('');
+      setEstimatedCost('0');
+      setSelectedDay(modalDay);
+      onRefresh();
     } catch (err) {
       console.error(err);
     } finally {
@@ -143,35 +138,25 @@ export default function MapView({ trip, onRefresh }: MapViewProps) {
   };
 
   // Delete Item
-  const handleDeleteItem = async (itemId: string, itemTitle: string) => {
+  const handleDeleteItem = (itemId: string, itemTitle: string) => {
     if (!confirm(`'${itemTitle}' 일정을 삭제하시겠습니까?`)) return;
 
     try {
-      const res = await fetch(`/api/itinerary/${itemId}`, {
-        method: 'DELETE',
-      });
-      if (res.ok) {
-        if (selectedItem?.id === itemId) {
-          setSelectedItem(null);
-        }
-        onRefresh();
+      deleteItineraryItem(itemId);
+      if (selectedItem?.id === itemId) {
+        setSelectedItem(null);
       }
+      onRefresh();
     } catch (err) {
       console.error(err);
     }
   };
 
   // Reorder Item
-  const handleReorder = async (itemId: string, direction: 'up' | 'down') => {
+  const handleReorder = (itemId: string, direction: 'up' | 'down') => {
     try {
-      const res = await fetch('/api/itinerary/reorder', {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ itemId, direction }),
-      });
-      if (res.ok) {
-        onRefresh();
-      }
+      reorderItineraryItem(itemId, direction);
+      onRefresh();
     } catch (err) {
       console.error(err);
     }
