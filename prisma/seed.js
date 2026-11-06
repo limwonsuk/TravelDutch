@@ -21,10 +21,10 @@ async function main() {
   await prisma.member.deleteMany();
   await prisma.trip.deleteMany();
 
-  console.log('Seeding Trip: 태안 갯벌 캠핑 우정 여행 (주연, 혜림, 용덕)...');
+  console.log('Seeding Trip: 여행플래너&더치페이 (주연, 혜림, 용덕)...');
   const trip = await prisma.trip.create({
     data: {
-      title: '태안 갯벌 캠핑 우정 여행',
+      title: '여행플래너&더치페이',
       startDate: '2026-11-06',
       endDate: '2026-11-07',
       currency: 'KRW',
@@ -71,10 +71,10 @@ async function main() {
       title: '태안 갯벌 캠핑',
       category: '기타',
       time: '14:00',
-      memo: '몽산포 갯벌 해루질 체험 및 오토 캠핑 사이트 구축',
-      lat: 36.6853,
-      lng: 126.2842,
-      estimatedCost: 256460,
+      memo: '안면도 갯벌 해루질 체험 및 오토 캠핑',
+      lat: 36.5056,
+      lng: 126.3378,
+      estimatedCost: 0,
     },
   });
 

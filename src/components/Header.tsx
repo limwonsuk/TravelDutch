@@ -94,7 +94,7 @@ export default function Header({ trip, activeTab, setActiveTab, onRefresh }: Hea
                     {trip.startDate} ~ {trip.endDate}
                   </span>
                   <span className="text-slate-300">•</span>
-                  <span className="text-indigo-600 font-medium">부산 광역시</span>
+                  <span className="text-indigo-600 font-medium">안면도 & 태안</span>
                 </div>
               </div>
             </div>

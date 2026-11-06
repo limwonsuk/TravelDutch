@@ -1,13 +1,13 @@
 import { TripData, Member, ItineraryItem, Expense, ExpenseSplit } from '@/types';
 import { calculateEvenSplits } from './settlement';
 
-// Version 3 storage key to ensure fresh initial load with new default schedule and expenses
-const STORAGE_KEY = 'travel_dutch_trip_data_v3';
+// Version 4 storage key to ensure fresh initial load with updated title and memo
+const STORAGE_KEY = 'travel_dutch_trip_data_v4';
 
 // Initial default data: 3 members (주연, 혜림, 용덕), 태안 갯벌 캠핑 일정, 7건의 지출 내역
 export const INITIAL_TRIP_DATA: TripData = {
   id: 'trip-taean-camping-1',
-  title: '태안 갯벌 캠핑 우정 여행',
+  title: '여행플래너&더치페이',
   startDate: '2026-11-06',
   endDate: '2026-11-07',
   currency: 'KRW',
@@ -25,10 +25,10 @@ export const INITIAL_TRIP_DATA: TripData = {
       title: '태안 갯벌 캠핑',
       category: '기타',
       time: '14:00',
-      memo: '몽산포 갯벌 해루질 체험 및 오토 캠핑 사이트 구축',
-      lat: 36.6853,
-      lng: 126.2842,
-      estimatedCost: 256460,
+      memo: '안면도 갯벌 해루질 체험 및 오토 캠핑',
+      lat: 36.5056,
+      lng: 126.3378,
+      estimatedCost: 0,
     },
   ],
   expenses: [
