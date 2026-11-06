@@ -1,13 +1,13 @@
 import { TripData, Member, ItineraryItem, Expense, ExpenseSplit } from '@/types';
 import { calculateEvenSplits } from './settlement';
 
-// Version 4 storage key to ensure fresh initial load with updated title and memo
-const STORAGE_KEY = 'travel_dutch_trip_data_v4';
+// Version 5 storage key to ensure fresh initial load with updated title: 우정여행&더치페이
+const STORAGE_KEY = 'travel_dutch_trip_data_v5';
 
 // Initial default data: 3 members (주연, 혜림, 용덕), 태안 갯벌 캠핑 일정, 7건의 지출 내역
 export const INITIAL_TRIP_DATA: TripData = {
   id: 'trip-taean-camping-1',
-  title: '여행플래너&더치페이',
+  title: '우정여행&더치페이',
   startDate: '2026-11-06',
   endDate: '2026-11-07',
   currency: 'KRW',

@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 import './globals.css';
 
 export const metadata: Metadata = {
-  title: '여행플래너&더치페이',
+  title: '우정여행&더치페이',
   description: '일정 타임라인, 동선 지도 & 동행자 최소 송금 더치페이 경비 자동 정산',
 };
 

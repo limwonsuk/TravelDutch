@@ -21,10 +21,10 @@ async function main() {
   await prisma.member.deleteMany();
   await prisma.trip.deleteMany();
 
-  console.log('Seeding Trip: 여행플래너&더치페이 (주연, 혜림, 용덕)...');
+  console.log('Seeding Trip: 우정여행&더치페이 (주연, 혜림, 용덕)...');
   const trip = await prisma.trip.create({
     data: {
-      title: '여행플래너&더치페이',
+      title: '우정여행&더치페이',
       startDate: '2026-11-06',
       endDate: '2026-11-07',
       currency: 'KRW',

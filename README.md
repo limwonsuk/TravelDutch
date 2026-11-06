@@ -1,4 +1,4 @@
-# ✈️ TravelDutch (부산 3박 4일 여행 플래너 & 더치페이 정산기)
+# 🏕️ 우정여행&더치페이 (여행 플래너 & 더치페이 정산기)
 
 > **Next.js 14, TypeScript, Tailwind CSS, Prisma(SQLite), Leaflet(OpenStreetMap)** 기반의  
 > 여행 일정 타임라인 & 동행자 최소 송금 더치페이 경비 자동 정산 웹 애플리케이션
