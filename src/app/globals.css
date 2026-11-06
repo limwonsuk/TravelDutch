@@ -1,0 +1,73 @@
+@import "leaflet/dist/leaflet.css";
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    @apply bg-slate-50 text-slate-800 antialiased min-h-screen;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  }
+}
+
+/* Custom Leaflet Marker */
+.custom-marker {
+  background: transparent;
+  border: none;
+}
+
+.custom-marker-pin {
+  width: 32px;
+  height: 32px;
+  border-radius: 50% 50% 50% 0;
+  background: #4f46e5;
+  position: absolute;
+  transform: rotate(-45deg);
+  left: 50%;
+  top: 50%;
+  margin: -20px 0 0 -16px;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid #ffffff;
+  transition: all 0.2s ease;
+}
+
+.custom-marker-pin:hover {
+  transform: rotate(-45deg) scale(1.15);
+  background: #4338ca;
+}
+
+.custom-marker-label {
+  transform: rotate(45deg);
+  color: #ffffff;
+  font-weight: 700;
+  font-size: 13px;
+  line-height: 1;
+}
+
+/* Active or selected marker highlight */
+.custom-marker.active .custom-marker-pin {
+  background: #ef4444;
+  transform: rotate(-45deg) scale(1.2);
+  border-color: #fef08a;
+  z-index: 1000;
+}
+
+/* Scrollbar styling */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: #f1f5f9;
+}
+::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}

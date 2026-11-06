@@ -1,0 +1,71 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:./dev.db"
+}
+
+model Trip {
+  id             String          @id @default(cuid())
+  title          String
+  startDate      String
+  endDate        String
+  currency       String          @default("KRW")
+  members        Member[]
+  itineraryItems ItineraryItem[]
+  expenses       Expense[]
+  createdAt      DateTime        @default(now())
+  updatedAt      DateTime        @updatedAt
+}
+
+model Member {
+  id            String         @id @default(cuid())
+  tripId        String
+  trip          Trip           @relation(fields: [tripId], references: [id], onDelete: Cascade)
+  name          String
+  avatarColor   String         @default("#4f46e5")
+  avatarEmoji   String         @default("😊")
+  expensesPaid  Expense[]      @relation("ExpensePayer")
+  expenseSplits ExpenseSplit[]
+  createdAt     DateTime       @default(now())
+}
+
+model ItineraryItem {
+  id            String   @id @default(cuid())
+  tripId        String
+  trip          Trip     @relation(fields: [tripId], references: [id], onDelete: Cascade)
+  dayNumber     Int
+  orderIndex    Int
+  title         String
+  category      String   // 관광, 식당, 숙소, 카페, 교통, 기타
+  time          String   // e.g. "10:30"
+  memo          String?
+  lat           Float
+  lng           Float
+  estimatedCost Int      @default(0)
+  createdAt     DateTime @default(now())
+}
+
+model Expense {
+  id        String         @id @default(cuid())
+  tripId    String
+  trip      Trip           @relation(fields: [tripId], references: [id], onDelete: Cascade)
+  title     String
+  amount    Int
+  category  String         // 식비, 숙박, 교통, 입장료, 기타
+  payerId   String
+  payer     Member         @relation("ExpensePayer", fields: [payerId], references: [id], onDelete: Cascade)
+  splits    ExpenseSplit[]
+  createdAt DateTime       @default(now())
+}
+
+model ExpenseSplit {
+  id        String  @id @default(cuid())
+  expenseId String
+  expense   Expense @relation(fields: [expenseId], references: [id], onDelete: Cascade)
+  memberId  String
+  member    Member  @relation(fields: [memberId], references: [id], onDelete: Cascade)
+  amount    Int
+}
