@@ -17,6 +17,8 @@ import {
   Navigation,
   DollarSign,
   Info,
+  Search,
+  Loader2,
 } from 'lucide-react';
 
 // Dynamically import LeafletMap with SSR disabled as strictly required by architecture rules!
@@ -70,6 +72,46 @@ export default function MapView({ trip, onRefresh }: MapViewProps) {
   const [lng, setLng] = useState('129.1604');
   const [estimatedCost, setEstimatedCost] = useState('0');
   const [isSubmitting, setIsSubmitting] = useState(false);
+
+  // Address Search State
+  const [searchKeyword, setSearchKeyword] = useState('');
+  const [isSearching, setIsSearching] = useState(false);
+  const [searchResults, setSearchResults] = useState<
+    Array<{ place_id: number; display_name: string; lat: string; lon: string }>
+  >([]);
+
+  // Address Search Handler (OpenStreetMap Nominatim)
+  const handleAddressSearch = async (e?: React.FormEvent) => {
+    if (e) e.preventDefault();
+    if (!searchKeyword.trim()) return;
+
+    setIsSearching(true);
+    try {
+      const res = await fetch(
+        `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(
+          searchKeyword.trim()
+        )}&limit=5&addressdetails=1`
+      );
+      if (res.ok) {
+        const data = await res.json();
+        setSearchResults(data);
+      }
+    } catch (err) {
+      console.error('Address search error:', err);
+    } finally {
+      setIsSearching(false);
+    }
+  };
+
+  const selectSearchResult = (item: { display_name: string; lat: string; lon: string }) => {
+    const parts = item.display_name.split(',');
+    const mainTitle = parts[0]?.trim() || searchKeyword.trim();
+    setTitle(mainTitle);
+    setLat(parseFloat(item.lat).toFixed(5));
+    setLng(parseFloat(item.lon).toFixed(5));
+    setSearchResults([]);
+    setSearchKeyword('');
+  };
 
   // Calculate dynamic days based on trip dates and items
   const totalDays = useMemo(() => {
@@ -352,6 +394,81 @@ export default function MapView({ trip, onRefresh }: MapViewProps) {
               >
                 <X className="w-5 h-5" />
               </button>
+            </div>
+
+            {/* 🔍 주소 및 명소 키워드 검색 바 */}
+            <div className="mt-4 relative">
+              <label className="text-xs font-bold text-slate-700 block mb-1.5 flex items-center gap-1.5">
+                <Search className="w-3.5 h-3.5 text-indigo-600" />
+                주소 또는 명소 검색 (예: 해운대 해수욕장, 제주공항, 강남역)
+              </label>
+              <div className="flex gap-2">
+                <div className="relative flex-1">
+                  <input
+                    type="text"
+                    value={searchKeyword}
+                    onChange={(e) => setSearchKeyword(e.target.value)}
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter') {
+                        e.preventDefault();
+                        handleAddressSearch();
+                      }
+                    }}
+                    placeholder="검색할 주소나 건물·명소 이름을 입력하세요"
+                    className="w-full pl-9 pr-3 py-2 rounded-xl border border-slate-300 text-xs focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                  />
+                  <Search className="w-4 h-4 text-slate-400 absolute left-3 top-2.5" />
+                </div>
+                <button
+                  type="button"
+                  onClick={() => handleAddressSearch()}
+                  disabled={isSearching || !searchKeyword.trim()}
+                  className="px-4 py-2 bg-indigo-600 text-white rounded-xl text-xs font-bold hover:bg-indigo-700 disabled:opacity-50 transition-colors flex items-center gap-1.5 flex-shrink-0 shadow-xs"
+                >
+                  {isSearching ? (
+                    <>
+                      <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                      <span>검색 중</span>
+                    </>
+                  ) : (
+                    <span>검색</span>
+                  )}
+                </button>
+              </div>
+
+              {/* 검색 결과 드롭다운 목록 */}
+              {searchResults.length > 0 && (
+                <div className="absolute left-0 right-0 top-full mt-1.5 z-50 bg-white border border-slate-200 rounded-xl shadow-xl overflow-hidden max-h-56 overflow-y-auto divide-y divide-slate-100">
+                  <div className="px-3 py-1.5 bg-slate-50 text-[11px] font-bold text-slate-500 flex justify-between items-center">
+                    <span>검색 결과 ({searchResults.length}건)</span>
+                    <button
+                      type="button"
+                      onClick={() => setSearchResults([])}
+                      className="text-slate-400 hover:text-slate-700 text-xs"
+                    >
+                      닫기 ✕
+                    </button>
+                  </div>
+                  {searchResults.map((res) => (
+                    <button
+                      key={res.place_id}
+                      type="button"
+                      onClick={() => selectSearchResult(res)}
+                      className="w-full px-3 py-2 text-left hover:bg-indigo-50 transition-colors flex items-start gap-2.5"
+                    >
+                      <MapPin className="w-4 h-4 text-rose-500 mt-0.5 flex-shrink-0" />
+                      <div className="flex-1 min-w-0">
+                        <div className="text-xs font-bold text-slate-900 truncate">
+                          {res.display_name.split(',')[0]}
+                        </div>
+                        <div className="text-[11px] text-slate-400 truncate">
+                          {res.display_name}
+                        </div>
+                      </div>
+                    </button>
+                  ))}
+                </div>
+              )}
             </div>
 
             {/* 부산 주요 명소 빠른 좌표 프리셋 선택 버튼 영역 */}
