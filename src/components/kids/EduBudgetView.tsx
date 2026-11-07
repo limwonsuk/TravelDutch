@@ -36,10 +36,15 @@ export default function EduBudgetView({ schedules }: EduBudgetViewProps) {
 
     const categoryMap: Record<string, number> = {};
 
+    const uniqueChildren = Array.from(new Set(schedules.map((s) => s.childName)));
+
     schedules.forEach((s) => {
       totalGrossKr += s.monthlyFee;
-      if (s.childName.includes("첫째")) firstChildKr += s.monthlyFee;
-      else secondChildKr += s.monthlyFee;
+      if (uniqueChildren.length === 0 || s.childName === uniqueChildren[0]) {
+        firstChildKr += s.monthlyFee;
+      } else {
+        secondChildKr += s.monthlyFee;
+      }
 
       if (s.paymentMethod.includes("지역화폐")) {
         localPayEligibleKr += s.monthlyFee;

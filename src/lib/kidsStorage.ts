@@ -24,7 +24,7 @@ export interface KidsHubDatabase {
   stamps: StampLogItem[];
 }
 
-const KIDS_DB_KEY = "travel_dutch_kids_hub_db_v1";
+const KIDS_DB_KEY = "travel_dutch_kids_hub_db_v3";
 
 function getInitialDb(): KidsHubDatabase {
   return {

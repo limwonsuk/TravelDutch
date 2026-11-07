@@ -120,11 +120,11 @@ export default function HomePage() {
       families.find((f) => f.familyKey === selectedFamilyKey) || {
         id: 1,
         familyKey: "park-juyeon",
-        familyName: "박주연 가족",
-        regionTag: "부산 해운대 · 센텀",
-        motto: "하준·서아 남매의 즐거운 배움과 주말 부울경 가족 탐험!",
-        avatar: "👨‍👩‍👧‍👦",
-        accentColor: "#3182F6",
+        familyName: "주연 가족",
+        regionTag: "승현(10세) · 다윤(6세)",
+        motto: "승현(10세)·다윤(6세) 남매의 즐거운 배움과 주말 부울경 가족 탐험!",
+        avatar: "🌸",
+        accentColor: "#EC4899",
       },
     [families, selectedFamilyKey]
   );
