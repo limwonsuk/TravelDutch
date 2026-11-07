@@ -71,3 +71,74 @@
 ::-webkit-scrollbar-thumb:hover {
   background: #94a3b8;
 }
+
+/* =========================================================
+   ☀️ 화이트 모드 (Light / White Mode) 스타일 오버라이드
+   ========================================================= */
+.theme-light {
+  color-scheme: light;
+  background-color: #f8fafc !important;
+  color: #0f172a !important;
+}
+
+.theme-light .bg-\[\#101013\] {
+  background-color: #f8fafc !important;
+}
+
+.theme-light .bg-\[\#17171C\] {
+  background-color: #ffffff !important;
+  box-shadow: 0 1px 3px 0 rgba(15, 23, 42, 0.06);
+}
+
+.theme-light .bg-\[\#202027\],
+.theme-light .bg-\[\#202027\]\/70,
+.theme-light .bg-\[\#202027\]\/60,
+.theme-light .bg-\[\#131318\],
+.theme-light .bg-\[\#1A1A22\] {
+  background-color: #f1f5f9 !important;
+}
+
+.theme-light .border-\[\#282832\],
+.theme-light .border-\[\#2C2C36\],
+.theme-light .border-\[\#2C2C38\],
+.theme-light .border-\[\#2E2E3A\],
+.theme-light .border-\[\#262632\],
+.theme-light .border-zinc-700,
+.theme-light .border-zinc-800 {
+  border-color: #cbd5e1 !important;
+}
+
+.theme-light .divide-\[\#23232C\] > :not([hidden]) ~ :not([hidden]),
+.theme-light .divide-\[\#252530\] > :not([hidden]) ~ :not([hidden]) {
+  border-color: #e2e8f0 !important;
+}
+
+.theme-light .text-white,
+.theme-light .text-zinc-100 {
+  color: #0f172a !important;
+}
+
+.theme-light .text-zinc-200,
+.theme-light .text-zinc-300 {
+  color: #334155 !important;
+}
+
+.theme-light .text-zinc-400 {
+  color: #64748b !important;
+}
+
+.theme-light .text-\[\#d5ff00\] {
+  color: #2563eb !important;
+}
+
+.theme-light .bg-\[\#d5ff00\] {
+  background-color: #2563eb !important;
+  color: #ffffff !important;
+}
+
+.theme-light .bg-\[\#3182F6\].text-white,
+.theme-light .bg-\[\#F24553\].text-white,
+.theme-light .bg-\[\#9f2cf5\].text-white,
+.theme-light [style*="background-color"].text-white {
+  color: #ffffff !important;
+}
