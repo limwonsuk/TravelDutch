@@ -84,9 +84,31 @@ export default function HomePage() {
     }
   }, []);
 
-  const refreshKidsDb = useCallback(() => {
-    const db = loadKidsDb();
-    setKidsDb({ ...db });
+  const refreshKidsDb = useCallback(async () => {
+    const localDb = loadKidsDb();
+    setKidsDb({ ...localDb });
+
+    try {
+      const res = await fetch("/api/kids");
+      if (res.ok) {
+        const cloudData = await res.json();
+        if (cloudData && cloudData.families && cloudData.families.length > 0) {
+          try {
+            localStorage.setItem("travel_dutch_kids_hub_db_v3", JSON.stringify(cloudData));
+          } catch {}
+          setKidsDb(cloudData);
+        } else {
+          // Cloud DB is empty: seed it with current local database
+          await fetch("/api/kids", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(localDb),
+          });
+        }
+      }
+    } catch (err) {
+      console.warn("Kids cloud sync error:", err);
+    }
   }, []);
 
   useEffect(() => {

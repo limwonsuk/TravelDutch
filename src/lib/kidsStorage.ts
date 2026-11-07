@@ -63,6 +63,13 @@ export function loadKidsDb(): KidsHubDatabase {
 export function saveKidsDb(db: KidsHubDatabase): void {
   if (typeof window !== "undefined") {
     localStorage.setItem(KIDS_DB_KEY, JSON.stringify(db));
+    try {
+      fetch("/api/kids", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(db),
+      }).catch((err) => console.warn("Background kids cloud sync:", err));
+    } catch {}
   }
 }
 

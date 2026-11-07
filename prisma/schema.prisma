@@ -70,3 +70,9 @@ model ExpenseSplit {
   member    Member  @relation(fields: [memberId], references: [id], onDelete: Cascade)
   amount    Int
 }
+
+model KidsHubData {
+  id        String   @id @default("global-kids-db")
+  data      Json
+  updatedAt DateTime @updatedAt
+}
