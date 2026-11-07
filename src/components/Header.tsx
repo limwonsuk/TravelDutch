@@ -38,23 +38,40 @@ export default function Header({ trip, activeTab, setActiveTab, onRefresh }: Hea
     return '3박 4일';
   }, [trip.startDate, trip.endDate]);
 
-  const handleAddMember = (e: React.FormEvent) => {
+  const handleAddMember = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!newMemberName.trim()) return;
 
     setIsSubmitting(true);
     try {
-      addMember(newMemberName.trim(), selectedColor, selectedEmoji);
+      const res = await fetch('/api/members', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          tripId: trip.id,
+          name: newMemberName.trim(),
+          avatarEmoji: selectedEmoji,
+          avatarColor: selectedColor,
+        }),
+      });
+
+      if (!res.ok) {
+        // Fallback to local storage
+        addMember(newMemberName.trim(), selectedColor, selectedEmoji);
+      }
       setNewMemberName('');
       onRefresh();
     } catch (err) {
       console.error(err);
+      addMember(newMemberName.trim(), selectedColor, selectedEmoji);
+      setNewMemberName('');
+      onRefresh();
     } finally {
       setIsSubmitting(false);
     }
   };
 
-  const handleDeleteMember = (memberId: string, memberName: string) => {
+  const handleDeleteMember = async (memberId: string, memberName: string) => {
     if (trip.members.length <= 1) {
       alert('최소 1명의 동행자가 있어야 합니다.');
       return;
@@ -64,10 +81,17 @@ export default function Header({ trip, activeTab, setActiveTab, onRefresh }: Hea
     }
 
     try {
-      deleteMember(memberId);
+      const res = await fetch(`/api/members/${memberId}`, {
+        method: 'DELETE',
+      });
+      if (!res.ok) {
+        deleteMember(memberId);
+      }
       onRefresh();
     } catch (err) {
       console.error(err);
+      deleteMember(memberId);
+      onRefresh();
     }
   };
 

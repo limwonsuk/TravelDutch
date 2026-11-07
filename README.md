@@ -1,62 +1,78 @@
-# 🏕️ 우정여행&더치페이 (여행 플래너 & 더치페이 정산기)
+# 🏕️ 우정여행&더치페이 (TravelDutch)
 
-> **Next.js 14, TypeScript, Tailwind CSS, Prisma(SQLite), Leaflet(OpenStreetMap)** 기반의  
-> 여행 일정 타임라인 & 동행자 최소 송금 더치페이 경비 자동 정산 웹 애플리케이션
+> **Next.js 14 (App Router), TypeScript, Tailwind CSS, Prisma, Supabase(PostgreSQL), Leaflet(OpenStreetMap)** 기반의  
+> 실시간 클라우드 DB 연동 여행 일정 타임라인 & 동행자 최소 송금 더치페이 자동 정산 풀스택 웹 애플리케이션
 
 ![Next.js](https://img.shields.io/badge/Next.js-14-black?logo=next.js)
 ![TypeScript](https://img.shields.io/badge/TypeScript-5-blue?logo=typescript)
 ![TailwindCSS](https://img.shields.io/badge/TailwindCSS-3-38B2AC?logo=tailwind-css)
-![Prisma](https://img.shields.io/badge/Prisma-SQLite-2D3748?logo=prisma)
-![Leaflet](https://img.shields.io/badge/Leaflet-OpenStreetMap-199900?logo=leaflet)
+![Prisma](https://img.shields.io/badge/Prisma-PostgreSQL-2D3748?logo=prisma)
+![Supabase](https://img.shields.io/badge/Supabase-Database-3ECF8E?logo=supabase)
+![Vercel](https://img.shields.io/badge/Vercel-Fullstack-black?logo=vercel)
 
 ---
 
 ## 🌟 핵심 기능
 
-### 1. 📅 일정 & 동선 맵 뷰 (2단 반응형 레이아웃)
-- **Day별 탭 전환**: Day 1 ~ Day 4 여행 코스 분할 조회
-- **타임라인 카드 & 실시간 순서 변경**: 위/아래 이동 버튼(Up/Down)으로 방문 순서 즉시 재정렬
-- **인터랙티브 지도 연동**: OpenStreetMap 기반 순서 번호 커스텀 배지 마커 및 점선 폴리라인(Polyline) 동선 연결
-- **지도 위치 선택 피커**: 일정 추가 모달 내 지도에서 원하는 장소를 클릭하면 위도/경도가 즉시 자동 세팅
-- **부산 12대 명소 빠른 프리셋**: 해운대, 광안리, 해동용궁사, 자갈치시장 등 원클릭 좌표 자동 입력
+1. **🗺️ 일정 & 동선 지도 (Leaflet + OpenStreetMap)**
+   - Day별 탭 전환 및 시간순 타임라인 카드
+   - 실시간 순서 변경 (위/아래 이동) 및 지도 커스텀 번호 핀 & 점선 Polyline 동선 연결
+   - 일정 추가 모달 내 **실시간 주소 / 장소명 검색** (Nominatim API)
+   - 모달 내 지도에서 원하는 위치를 마우스로 직접 클릭 시 위도/경도 자동 세팅
 
-### 2. 💰 경비 내역 & 더치페이 정산 뷰
-- **총 지출액 & 1인당 평균 부담액 요약**: 카테고리별(식비, 숙박, 교통, 입장료 등) 지출 분포 프로그레스 바
-- **최소 송금(Minimum Cash Flow) 정산표**:
-  - 그리디 알고리즘 기반으로 불필요한 송금을 묶어 최소 거래 횟수로 정산 완성
-  - '누가 ➔ 누구에게 얼마 송금' 시각적 화살표 카드 제공
-  - 10원 단위 반올림 및 절사 오차 자동 보정
-- **동행자별 순잔액 현황**: 총 지불액 vs 총 분담액(양수: 수령, 음수: 송금) 카드
-- **원클릭 메신저 공유**: 카카오톡/메신저 공유용 정산 요약 텍스트 클립보드 복사
+2. **💰 경비 내역 & 더치페이 최소 송금 (Greedy 알고리즘)**
+   - 총 지출액, 1인당 평균 분담액, 카테고리별 지출 비율 프로그레스 바
+   - 지출 등록 시 N분의 1 자동 분배 및 10원 단위 반올림 오차 자동 보정
+   - **최소 송금 정산표 (Minimum Cash Flow)**: 불필요한 거래를 묶어 최소 거래 횟수로 '누가 ➔ 누구에게 얼마 송금' 시각화
+   - 원클릭 카카오톡/메신저 공유용 텍스트 복사
+
+3. **☁️ Vercel + Supabase 클라우드 실시간 DB 연동**
+   - 브라우저 로컬 저장을 넘어 **Supabase(PostgreSQL)** 클라우드 DB에 데이터 영구 보관
+   - 여러 친구들이 서로 다른 스마트폰이나 PC에서 접속해도 동일한 일정과 경비 내역을 실시간으로 함께 확인 및 수정 가능
 
 ---
 
-## 🚀 빠른 시작 (Local Setup)
+## 🚀 Vercel + Supabase 연동 배포 가이드 (3분 완성)
 
-### 1. 패키지 설치
-```bash
-npm install
-```
+### 1단계: Supabase 프로젝트 생성 및 DB 접속 주소 확인
+1. **[Supabase](https://supabase.com)** 에 접속하여 로그인 후 **New Project**를 생성합니다.
+2. 프로젝트 생성 후 좌측 메뉴에서 **Project Settings (⚙️) ➔ Database** 로 이동합니다.
+3. **Connection string** 섹션에서 다음 두 가지 주소를 확인합니다:
+   - **Connection Pooling (`Session` 또는 `Transaction` 모드)**: 포트 `6543` ➔ `DATABASE_URL`로 사용
+   - **Direct connection**: 포트 `5432` ➔ `DIRECT_URL`로 사용
+   *(비밀번호 부분 `[YOUR-PASSWORD]`를 프로젝트 생성 시 입력한 DB 비밀번호로 변경)*
 
-### 2. 데이터베이스 설정 및 시드 데이터 주입
+### 2단계: 로컬에서 Supabase로 초기 테이블 푸시 (선택)
 ```bash
-# SQLite DB 생성 및 스키마 반영
+# .env 파일 생성 후 Supabase URL 입력
+DATABASE_URL="postgresql://postgres.[PROJECT-REF]:[PASSWORD]@aws-0-[REGION].pooler.supabase.com:6543/postgres?pgbouncer=true"
+DIRECT_URL="postgresql://postgres.[PROJECT-REF]:[PASSWORD]@aws-0-[REGION].pooler.supabase.com:5432/postgres"
+
+# Supabase DB에 테이블 스키마 즉시 푸시
 npx prisma db push
-
-# 5인 3박 4일 시드 데이터 주입
-npm run prisma:seed
 ```
 
-### 3. 개발 서버 구동
+### 3단계: Vercel에 GitHub 레포지토리 연결 및 환경변수 등록
+1. **[Vercel](https://vercel.com)** 에 접속하여 **Add New... ➔ Project**를 누르고 **`TravelDutch`** 레포지토리를 선택합니다.
+2. **Environment Variables** 섹션에 아래 2개의 환경 변수를 추가합니다:
+   - **`DATABASE_URL`**: Supabase Connection Pooling 주소 (포트 6543)
+   - **`DIRECT_URL`**: Supabase Direct connection 주소 (포트 5432)
+3. **Deploy** 버튼을 누릅니다!
+   - Vercel이 자동으로 Next.js 빌드 및 Prisma 클라이언트를 구성하여 배포를 완료합니다.
+   - 첫 접속 시 DB가 비어있으면 `GET /api/trip`이 자동으로 초기 일정(태안 갯벌 캠핑)과 7건의 경비 내역을 Supabase에 주입(Auto-seed)합니다.
+
+---
+
+## 💻 로컬 개발 환경 실행
+
 ```bash
+# 종속성 설치
+npm install
+
+# Prisma 클라이언트 생성
+npx prisma generate
+
+# 개발 서버 구동
 npm run dev
 ```
 브라우저에서 `http://localhost:3000` 접속
-
----
-
-## 🧪 테스트 실행
-```bash
-npm test
-```
-- 그리디 알고리즘 단위 테스트 (최소 거래 횟수 및 10원 단위 보존 검증)

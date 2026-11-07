@@ -74,7 +74,7 @@ export default function DutchPayView({ trip, onRefresh }: DutchPayViewProps) {
   };
 
   // Add Expense
-  const handleAddExpense = (e: React.FormEvent) => {
+  const handleAddExpense = async (e: React.FormEvent) => {
     e.preventDefault();
     const numAmount = parseInt(amount, 10);
     if (!title.trim() || isNaN(numAmount) || numAmount <= 0) return;
@@ -85,6 +85,34 @@ export default function DutchPayView({ trip, onRefresh }: DutchPayViewProps) {
 
     setIsSubmitting(true);
     try {
+      const res = await fetch('/api/expenses', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          tripId: trip.id,
+          title: title.trim(),
+          amount: numAmount,
+          category,
+          payerId: payerId || trip.members[0]?.id,
+          splitMemberIds: selectedMemberIds,
+        }),
+      });
+
+      if (!res.ok) {
+        addExpense(
+          title.trim(),
+          numAmount,
+          category,
+          payerId || trip.members[0]?.id,
+          selectedMemberIds
+        );
+      }
+
+      setTitle('');
+      setAmount('');
+      onRefresh();
+    } catch (err) {
+      console.error(err);
       addExpense(
         title.trim(),
         numAmount,
@@ -95,22 +123,27 @@ export default function DutchPayView({ trip, onRefresh }: DutchPayViewProps) {
       setTitle('');
       setAmount('');
       onRefresh();
-    } catch (err) {
-      console.error(err);
     } finally {
       setIsSubmitting(false);
     }
   };
 
   // Delete Expense
-  const handleDeleteExpense = (expenseId: string, expenseTitle: string) => {
+  const handleDeleteExpense = async (expenseId: string, expenseTitle: string) => {
     if (!confirm(`'${expenseTitle}' 지출 내역을 삭제하시겠습니까?`)) return;
 
     try {
-      deleteExpense(expenseId);
+      const res = await fetch(`/api/expenses/${expenseId}`, {
+        method: 'DELETE',
+      });
+      if (!res.ok) {
+        deleteExpense(expenseId);
+      }
       onRefresh();
     } catch (err) {
       console.error(err);
+      deleteExpense(expenseId);
+      onRefresh();
     }
   };
 

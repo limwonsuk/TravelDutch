@@ -65,10 +65,23 @@ export default function HomePage() {
   const [newFamilyRegion, setNewFamilyRegion] = useState<string>("부산 해운대");
   const [newFirstChild, setNewFirstChild] = useState<string>("첫째 아이 (초1)");
 
-  const refreshTrip = useCallback(() => {
-    const data = getTrip();
-    setTrip({ ...data });
-    setLoading(false);
+  // Supabase 클라우드 DB 연동 fetchTrip (실패 시 local storage fallback)
+  const fetchTrip = useCallback(async () => {
+    try {
+      const res = await fetch("/api/trip");
+      if (res.ok) {
+        const data: TripData = await res.json();
+        setTrip(data);
+      } else {
+        console.warn("API fetch failed, falling back to local storage cache");
+        setTrip(getTrip());
+      }
+    } catch (err) {
+      console.warn("Network error, falling back to local storage cache:", err);
+      setTrip(getTrip());
+    } finally {
+      setLoading(false);
+    }
   }, []);
 
   const refreshKidsDb = useCallback(() => {
@@ -77,7 +90,7 @@ export default function HomePage() {
   }, []);
 
   useEffect(() => {
-    refreshTrip();
+    fetchTrip();
     refreshKidsDb();
     try {
       const savedFam = localStorage.getItem("kidslife_selected_family");
@@ -90,7 +103,7 @@ export default function HomePage() {
         setThemeMode(savedTheme);
       }
     } catch {}
-  }, [refreshTrip, refreshKidsDb]);
+  }, [fetchTrip, refreshKidsDb]);
 
   useEffect(() => {
     try {
@@ -191,6 +204,9 @@ export default function HomePage() {
           <Loader2 className="w-5 h-5 animate-spin text-indigo-600" />
           <span>통합 라이프 & 여행 플랫폼을 불러오는 중...</span>
         </div>
+        <p className="text-xs text-slate-400 mt-2">
+          Supabase 클라우드 데이터베이스와 일정을 동기화하고 있습니다.
+        </p>
       </div>
     );
   }
@@ -469,13 +485,13 @@ export default function HomePage() {
             trip={trip}
             activeTab={activeTravelTab}
             setActiveTab={setActiveTravelTab}
-            onRefresh={refreshTrip}
+            onRefresh={fetchTrip}
           />
           <main className="flex-1 pb-12">
             {activeTravelTab === "itinerary" ? (
-              <MapView trip={trip} onRefresh={refreshTrip} />
+              <MapView trip={trip} onRefresh={fetchTrip} />
             ) : (
-              <DutchPayView trip={trip} onRefresh={refreshTrip} />
+              <DutchPayView trip={trip} onRefresh={fetchTrip} />
             )}
           </main>
         </div>

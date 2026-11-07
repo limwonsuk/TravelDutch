@@ -148,12 +148,42 @@ export default function MapView({ trip, onRefresh }: MapViewProps) {
   };
 
   // Add Item
-  const handleAddItem = (e: React.FormEvent) => {
+  const handleAddItem = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!title.trim()) return;
 
     setIsSubmitting(true);
     try {
+      const payload = {
+        tripId: trip.id,
+        dayNumber: modalDay,
+        title: title.trim(),
+        category,
+        time,
+        memo: memo.trim(),
+        lat: parseFloat(lat) || 35.1587,
+        lng: parseFloat(lng) || 129.1604,
+        estimatedCost: parseInt(estimatedCost) || 0,
+      };
+
+      const res = await fetch('/api/itinerary', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
+      });
+
+      if (!res.ok) {
+        addItineraryItem(payload);
+      }
+
+      setIsAddModalOpen(false);
+      setTitle('');
+      setMemo('');
+      setEstimatedCost('0');
+      setSelectedDay(modalDay);
+      onRefresh();
+    } catch (err) {
+      console.error(err);
       addItineraryItem({
         tripId: trip.id,
         dayNumber: modalDay,
@@ -165,42 +195,58 @@ export default function MapView({ trip, onRefresh }: MapViewProps) {
         lng: parseFloat(lng) || 129.1604,
         estimatedCost: parseInt(estimatedCost) || 0,
       });
-
       setIsAddModalOpen(false);
       setTitle('');
       setMemo('');
       setEstimatedCost('0');
       setSelectedDay(modalDay);
       onRefresh();
-    } catch (err) {
-      console.error(err);
     } finally {
       setIsSubmitting(false);
     }
   };
 
   // Delete Item
-  const handleDeleteItem = (itemId: string, itemTitle: string) => {
+  const handleDeleteItem = async (itemId: string, itemTitle: string) => {
     if (!confirm(`'${itemTitle}' 일정을 삭제하시겠습니까?`)) return;
 
     try {
-      deleteItineraryItem(itemId);
+      const res = await fetch(`/api/itinerary/${itemId}`, {
+        method: 'DELETE',
+      });
+      if (!res.ok) {
+        deleteItineraryItem(itemId);
+      }
       if (selectedItem?.id === itemId) {
         setSelectedItem(null);
       }
       onRefresh();
     } catch (err) {
       console.error(err);
+      deleteItineraryItem(itemId);
+      if (selectedItem?.id === itemId) {
+        setSelectedItem(null);
+      }
+      onRefresh();
     }
   };
 
   // Reorder Item
-  const handleReorder = (itemId: string, direction: 'up' | 'down') => {
+  const handleReorder = async (itemId: string, direction: 'up' | 'down') => {
     try {
-      reorderItineraryItem(itemId, direction);
+      const res = await fetch('/api/itinerary/reorder', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ itemId, direction }),
+      });
+      if (!res.ok) {
+        reorderItineraryItem(itemId, direction);
+      }
       onRefresh();
     } catch (err) {
       console.error(err);
+      reorderItineraryItem(itemId, direction);
+      onRefresh();
     }
   };
 
