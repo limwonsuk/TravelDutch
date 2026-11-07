@@ -271,30 +271,28 @@ export default function HomePage() {
               </button>
             </div>
 
-            {globalMode !== "TRAVEL_DUTCH" && (
-              <div className="flex bg-slate-800 p-1 rounded-xl border border-slate-700 font-bold">
-                <button
-                  onClick={() => setThemeMode("dark")}
-                  className={`px-2.5 py-1 rounded-lg flex items-center gap-1 transition ${
-                    themeMode === "dark"
-                      ? "bg-[#3182F6] text-white"
-                      : "text-slate-400 hover:text-white"
-                  }`}
-                >
-                  <Moon className="w-3.5 h-3.5" /> 다크
-                </button>
-                <button
-                  onClick={() => setThemeMode("light")}
-                  className={`px-2.5 py-1 rounded-lg flex items-center gap-1 transition ${
-                    themeMode === "light"
-                      ? "bg-[#3182F6] text-white"
-                      : "text-slate-400 hover:text-white"
-                  }`}
-                >
-                  <Sun className="w-3.5 h-3.5" /> 화이트
-                </button>
-              </div>
-            )}
+            <div className="flex bg-slate-800 p-1 rounded-xl border border-slate-700 font-bold">
+              <button
+                onClick={() => setThemeMode("dark")}
+                className={`px-2.5 py-1 rounded-lg flex items-center gap-1 transition ${
+                  themeMode === "dark"
+                    ? "bg-[#3182F6] text-white shadow"
+                    : "text-slate-400 hover:text-white"
+                }`}
+              >
+                <Moon className="w-3.5 h-3.5" /> 다크
+              </button>
+              <button
+                onClick={() => setThemeMode("light")}
+                className={`px-2.5 py-1 rounded-lg flex items-center gap-1 transition ${
+                  themeMode === "light"
+                    ? "bg-[#3182F6] text-white shadow"
+                    : "text-slate-400 hover:text-white"
+                }`}
+              >
+                <Sun className="w-3.5 h-3.5" /> 화이트
+              </button>
+            </div>
           </div>
         </div>
       </div>
@@ -460,7 +458,13 @@ export default function HomePage() {
           3) OUTING_MODE: [부산·경남·경북 나들이]
           ========================================================= */}
       {globalMode === "TRAVEL_DUTCH" ? (
-        <div className="flex-1 bg-slate-50 flex flex-col">
+        <div
+          className={`flex-1 flex flex-col transition-colors duration-200 ${
+            themeMode === "dark"
+              ? "travel-dark bg-[#101013] text-zinc-100"
+              : "travel-light bg-slate-50 text-slate-800"
+          }`}
+        >
           <Header
             trip={trip}
             activeTab={activeTravelTab}

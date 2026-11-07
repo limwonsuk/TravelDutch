@@ -73,7 +73,93 @@
 }
 
 /* =========================================================
-   ☀️ 화이트 모드 (Light / White Mode) 스타일 오버라이드
+   🌙 [우정여행&더치페이] 다크모드 (travel-dark) 스타일 오버라이드
+   ========================================================= */
+.travel-dark {
+  color-scheme: dark;
+  background-color: #101013 !important;
+  color: #f4f4f5 !important;
+}
+
+.travel-dark .bg-white {
+  background-color: #17171C !important;
+  color: #f4f4f5 !important;
+}
+
+.travel-dark .bg-slate-50,
+.travel-dark .bg-slate-50\/50,
+.travel-dark .bg-slate-50\/80,
+.travel-dark .bg-slate-100,
+.travel-dark .bg-slate-100\/80 {
+  background-color: #202027 !important;
+}
+
+.travel-dark .bg-indigo-50,
+.travel-dark .bg-indigo-50\/50,
+.travel-dark .bg-indigo-50\/60 {
+  background-color: rgba(79, 70, 229, 0.18) !important;
+}
+
+.travel-dark .bg-emerald-50,
+.travel-dark .bg-emerald-50\/60 {
+  background-color: rgba(16, 185, 129, 0.15) !important;
+}
+
+.travel-dark .bg-rose-50,
+.travel-dark .bg-rose-50\/60 {
+  background-color: rgba(244, 63, 94, 0.15) !important;
+}
+
+.travel-dark .border-slate-100,
+.travel-dark .border-slate-200,
+.travel-dark .border-slate-300,
+.travel-dark .border-indigo-100,
+.travel-dark .border-indigo-200,
+.travel-dark .border-emerald-200 {
+  border-color: #2C2C38 !important;
+}
+
+.travel-dark .divide-slate-100 > :not([hidden]) ~ :not([hidden]),
+.travel-dark .divide-slate-200 > :not([hidden]) ~ :not([hidden]) {
+  border-color: #282832 !important;
+}
+
+.travel-dark .text-slate-900,
+.travel-dark .text-slate-800 {
+  color: #f8fafc !important;
+}
+
+.travel-dark .text-slate-700,
+.travel-dark .text-slate-600 {
+  color: #cbd5e1 !important;
+}
+
+.travel-dark .text-slate-500,
+.travel-dark .text-slate-400 {
+  color: #94a3b8 !important;
+}
+
+.travel-dark .text-indigo-700,
+.travel-dark .text-indigo-800,
+.travel-dark .text-indigo-900 {
+  color: #a5b4fc !important;
+}
+
+.travel-dark .text-emerald-700,
+.travel-dark .text-emerald-800 {
+  color: #34d399 !important;
+}
+
+.travel-dark input,
+.travel-dark select,
+.travel-dark textarea {
+  background-color: #202027 !important;
+  color: #f8fafc !important;
+  border-color: #3f3f46 !important;
+}
+
+/* =========================================================
+   ☀️ [학원·간트차트 & 나들이] 화이트 모드 (theme-light) 스타일 오버라이드
    ========================================================= */
 .theme-light {
   color-scheme: light;
