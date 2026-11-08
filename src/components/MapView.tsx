@@ -269,7 +269,7 @@ export default function MapView({ trip, onRefresh }: MapViewProps) {
                   }}
                   className={`px-3.5 py-1.5 text-xs font-bold rounded-lg transition-all whitespace-nowrap ${
                     selectedDay === day
-                      ? 'bg-white text-indigo-600 shadow-xs'
+                      ? 'bg-white text-[#1D68FE] shadow-xs'
                       : 'text-slate-500 hover:text-slate-800'
                   }`}
                 >
@@ -283,7 +283,7 @@ export default function MapView({ trip, onRefresh }: MapViewProps) {
                 setModalDay(selectedDay);
                 setIsAddModalOpen(true);
               }}
-              className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-indigo-600 text-white text-xs font-bold hover:bg-indigo-700 shadow-xs shadow-indigo-100 transition-colors flex-shrink-0"
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-[#1D68FE] text-white text-xs font-bold hover:bg-blue-600 shadow-xs shadow-blue-500/20 transition-colors flex-shrink-0"
             >
               <Plus className="w-3.5 h-3.5" />
               <span>일정 추가</span>
@@ -319,7 +319,7 @@ export default function MapView({ trip, onRefresh }: MapViewProps) {
                     onClick={() => setSelectedItem(item)}
                     className={`group relative p-3.5 rounded-xl border transition-all cursor-pointer ${
                       isSelected
-                        ? 'border-indigo-500 bg-indigo-50/40 ring-2 ring-indigo-500/20 shadow-xs'
+                        ? 'border-indigo-500 bg-blue-50/40 ring-2 ring-indigo-500/20 shadow-xs'
                         : 'border-slate-200 hover:border-slate-300 bg-white hover:bg-slate-50/60 shadow-xs'
                     }`}
                   >
@@ -330,7 +330,7 @@ export default function MapView({ trip, onRefresh }: MapViewProps) {
                           className={`w-7 h-7 rounded-lg flex items-center justify-center font-bold text-xs flex-shrink-0 transition-colors ${
                             isSelected
                               ? 'bg-rose-500 text-white shadow-xs'
-                              : 'bg-indigo-600 text-white'
+                              : 'bg-[#1D68FE] text-white'
                           }`}
                         >
                           {item.orderIndex}
@@ -405,7 +405,7 @@ export default function MapView({ trip, onRefresh }: MapViewProps) {
         <div className="lg:col-span-7 bg-white rounded-2xl shadow-sm border border-slate-200 p-3 h-[640px] flex flex-col">
           <div className="flex items-center justify-between px-2 py-1 mb-2">
             <div className="flex items-center gap-2">
-              <MapPin className="w-4 h-4 text-indigo-600" />
+              <MapPin className="w-4 h-4 text-[#1D68FE]" />
               <h3 className="font-bold text-slate-800 text-sm">
                 Day {selectedDay} 동선 및 인터랙티브 지도
               </h3>
@@ -429,7 +429,7 @@ export default function MapView({ trip, onRefresh }: MapViewProps) {
           <div className="bg-white rounded-2xl max-w-lg w-full p-6 shadow-2xl border border-slate-200 animate-in fade-in zoom-in-95 duration-150 max-h-[90vh] overflow-y-auto">
             <div className="flex items-center justify-between pb-3 border-b border-slate-100">
               <div className="flex items-center gap-2">
-                <Sparkles className="w-5 h-5 text-indigo-600" />
+                <Sparkles className="w-5 h-5 text-[#1D68FE]" />
                 <h3 className="text-lg font-bold text-slate-900">
                   Day {modalDay} 새 일정 추가
                 </h3>
@@ -445,7 +445,7 @@ export default function MapView({ trip, onRefresh }: MapViewProps) {
             {/* 🔍 주소 및 명소 키워드 검색 바 */}
             <div className="mt-4 relative">
               <label className="text-xs font-bold text-slate-700 block mb-1.5 flex items-center gap-1.5">
-                <Search className="w-3.5 h-3.5 text-indigo-600" />
+                <Search className="w-3.5 h-3.5 text-[#1D68FE]" />
                 주소 또는 명소 검색 (예: 해운대 해수욕장, 제주공항, 강남역)
               </label>
               <div className="flex gap-2">
@@ -461,7 +461,7 @@ export default function MapView({ trip, onRefresh }: MapViewProps) {
                       }
                     }}
                     placeholder="검색할 주소나 건물·명소 이름을 입력하세요"
-                    className="w-full pl-9 pr-3 py-2 rounded-xl border border-slate-300 text-xs focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                    className="w-full pl-9 pr-3 py-2 rounded-xl border border-slate-300 text-xs focus:outline-none focus:ring-2 focus:ring-[#1D68FE]"
                   />
                   <Search className="w-4 h-4 text-slate-400 absolute left-3 top-2.5" />
                 </div>
@@ -469,7 +469,7 @@ export default function MapView({ trip, onRefresh }: MapViewProps) {
                   type="button"
                   onClick={() => handleAddressSearch()}
                   disabled={isSearching || !searchKeyword.trim()}
-                  className="px-4 py-2 bg-indigo-600 text-white rounded-xl text-xs font-bold hover:bg-indigo-700 disabled:opacity-50 transition-colors flex items-center gap-1.5 flex-shrink-0 shadow-xs"
+                  className="px-4 py-2 bg-[#1D68FE] text-white rounded-xl text-xs font-bold hover:bg-blue-600 disabled:opacity-50 transition-colors flex items-center gap-1.5 flex-shrink-0 shadow-xs"
                 >
                   {isSearching ? (
                     <>
@@ -500,7 +500,7 @@ export default function MapView({ trip, onRefresh }: MapViewProps) {
                       key={res.place_id}
                       type="button"
                       onClick={() => selectSearchResult(res)}
-                      className="w-full px-3 py-2 text-left hover:bg-indigo-50 transition-colors flex items-start gap-2.5"
+                      className="w-full px-3 py-2 text-left hover:bg-blue-50 transition-colors flex items-start gap-2.5"
                     >
                       <MapPin className="w-4 h-4 text-rose-500 mt-0.5 flex-shrink-0" />
                       <div className="flex-1 min-w-0">
@@ -518,9 +518,9 @@ export default function MapView({ trip, onRefresh }: MapViewProps) {
             </div>
 
             {/* 부산 주요 명소 빠른 좌표 프리셋 선택 버튼 영역 */}
-            <div className="mt-4 p-3 bg-indigo-50/60 rounded-xl border border-indigo-100">
+            <div className="mt-4 p-3 bg-blue-50/60 rounded-xl border border-blue-100">
               <label className="text-xs font-bold text-indigo-900 block mb-2 flex items-center gap-1.5">
-                <Sparkles className="w-3.5 h-3.5 text-indigo-600" />
+                <Sparkles className="w-3.5 h-3.5 text-[#1D68FE]" />
                 부산 대표 명소 빠른 좌표 프리셋 (클릭 시 자동 입력)
               </label>
               <div className="flex flex-wrap gap-1.5">
@@ -529,7 +529,7 @@ export default function MapView({ trip, onRefresh }: MapViewProps) {
                     key={preset.name}
                     type="button"
                     onClick={() => applyPreset(preset)}
-                    className="px-2.5 py-1 text-xs rounded-lg bg-white border border-indigo-200 text-indigo-800 hover:bg-indigo-600 hover:text-white hover:border-transparent transition-all font-medium shadow-xs"
+                    className="px-2.5 py-1 text-xs rounded-lg bg-white border border-blue-200 text-indigo-800 hover:bg-[#1D68FE] hover:text-white hover:border-transparent transition-all font-medium shadow-xs"
                   >
                     {preset.name}
                   </button>
@@ -547,7 +547,7 @@ export default function MapView({ trip, onRefresh }: MapViewProps) {
                   <select
                     value={modalDay}
                     onChange={(e) => setModalDay(Number(e.target.value))}
-                    className="w-full px-3 py-2 rounded-xl border border-slate-300 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 bg-white"
+                    className="w-full px-3 py-2 rounded-xl border border-slate-300 text-sm focus:outline-none focus:ring-2 focus:ring-[#1D68FE] bg-white"
                   >
                     {totalDays.map((d) => (
                       <option key={d} value={d}>
@@ -565,7 +565,7 @@ export default function MapView({ trip, onRefresh }: MapViewProps) {
                     value={title}
                     onChange={(e) => setTitle(e.target.value)}
                     placeholder="예: 해운대 해수욕장"
-                    className="w-full px-3.5 py-2 rounded-xl border border-slate-300 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                    className="w-full px-3.5 py-2 rounded-xl border border-slate-300 text-sm focus:outline-none focus:ring-2 focus:ring-[#1D68FE]"
                     required
                   />
                 </div>
@@ -579,7 +579,7 @@ export default function MapView({ trip, onRefresh }: MapViewProps) {
                   <select
                     value={category}
                     onChange={(e) => setCategory(e.target.value)}
-                    className="w-full px-3 py-2 rounded-xl border border-slate-300 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 bg-white"
+                    className="w-full px-3 py-2 rounded-xl border border-slate-300 text-sm focus:outline-none focus:ring-2 focus:ring-[#1D68FE] bg-white"
                   >
                     <option value="관광">관광</option>
                     <option value="식당">식당</option>
@@ -598,7 +598,7 @@ export default function MapView({ trip, onRefresh }: MapViewProps) {
                     type="time"
                     value={time}
                     onChange={(e) => setTime(e.target.value)}
-                    className="w-full px-3 py-2 rounded-xl border border-slate-300 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                    className="w-full px-3 py-2 rounded-xl border border-slate-300 text-sm focus:outline-none focus:ring-2 focus:ring-[#1D68FE]"
                   />
                 </div>
               </div>
@@ -610,7 +610,7 @@ export default function MapView({ trip, onRefresh }: MapViewProps) {
                     <MapPin className="w-3.5 h-3.5 text-rose-500" />
                     지도에서 위치 직접 선택 (클릭 시 자동 세팅)
                   </label>
-                  <span className="text-[11px] font-semibold text-indigo-600 bg-indigo-50 px-2 py-0.5 rounded-full border border-indigo-100">
+                  <span className="text-[11px] font-semibold text-[#1D68FE] bg-blue-50 px-2 py-0.5 rounded-full border border-blue-100">
                     지도를 클릭하세요 📍
                   </span>
                 </div>
@@ -635,7 +635,7 @@ export default function MapView({ trip, onRefresh }: MapViewProps) {
                     step="0.0001"
                     value={lat}
                     onChange={(e) => setLat(e.target.value)}
-                    className="w-full px-3 py-2 rounded-xl border border-slate-300 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 font-mono bg-slate-50/50"
+                    className="w-full px-3 py-2 rounded-xl border border-slate-300 text-sm focus:outline-none focus:ring-2 focus:ring-[#1D68FE] font-mono bg-slate-50/50"
                     required
                   />
                 </div>
@@ -648,7 +648,7 @@ export default function MapView({ trip, onRefresh }: MapViewProps) {
                     step="0.0001"
                     value={lng}
                     onChange={(e) => setLng(e.target.value)}
-                    className="w-full px-3 py-2 rounded-xl border border-slate-300 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 font-mono bg-slate-50/50"
+                    className="w-full px-3 py-2 rounded-xl border border-slate-300 text-sm focus:outline-none focus:ring-2 focus:ring-[#1D68FE] font-mono bg-slate-50/50"
                     required
                   />
                 </div>
@@ -663,7 +663,7 @@ export default function MapView({ trip, onRefresh }: MapViewProps) {
                   value={estimatedCost}
                   onChange={(e) => setEstimatedCost(e.target.value)}
                   placeholder="0"
-                  className="w-full px-3 py-2 rounded-xl border border-slate-300 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                  className="w-full px-3 py-2 rounded-xl border border-slate-300 text-sm focus:outline-none focus:ring-2 focus:ring-[#1D68FE]"
                 />
               </div>
 
@@ -676,14 +676,14 @@ export default function MapView({ trip, onRefresh }: MapViewProps) {
                   onChange={(e) => setMemo(e.target.value)}
                   placeholder="포토존, 추천 메뉴, 주차 정보 등"
                   rows={2}
-                  className="w-full px-3 py-2 rounded-xl border border-slate-300 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                  className="w-full px-3 py-2 rounded-xl border border-slate-300 text-sm focus:outline-none focus:ring-2 focus:ring-[#1D68FE]"
                 />
               </div>
 
               <button
                 type="submit"
                 disabled={isSubmitting || !title.trim()}
-                className="w-full py-2.5 px-4 rounded-xl bg-indigo-600 text-white font-medium text-sm hover:bg-indigo-700 disabled:opacity-50 transition-colors flex items-center justify-center gap-1.5"
+                className="w-full py-2.5 px-4 rounded-xl bg-[#1D68FE] text-white font-medium text-sm hover:bg-blue-600 disabled:opacity-50 transition-colors flex items-center justify-center gap-1.5"
               >
                 <Plus className="w-4 h-4" />
                 <span>Day {selectedDay}에 일정 등록</span>
