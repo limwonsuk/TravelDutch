@@ -1,0 +1,808 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>우정여행&더치페이 - 정산 스트레스 없는 스마트 그룹 여행 플랫폼</title>
+  <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Pretendard', '-apple-system', 'BlinkMacSystemFont', 'system-ui', 'Roboto', 'sans-serif'],
+          },
+          colors: {
+            brand: {
+              50: '#eff6ff',
+              100: '#dbeafe',
+              200: '#bfdbfe',
+              500: '#3b82f6',
+              600: '#1d4ed8',
+              700: '#1e40af',
+              vivid: '#1D68FE', // 채널톡 스타일의 청명하고 또렷한 비비드 블루
+              dark: '#0B192C',
+            },
+            pastel: {
+              blue: '#F4F8FF',
+              sky: '#F0F7FD',
+              purple: '#F7F5FF',
+              amber: '#FFF9F0',
+              mint: '#F0FDF8',
+            }
+          },
+          borderRadius: {
+            '2xl': '20px',
+            '3xl': '28px',
+            '4xl': '36px',
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    body {
+      font-family: 'Pretendard', -apple-system, sans-serif;
+      color: #191F28;
+      background-color: #ffffff;
+      -webkit-font-smoothing: antialiased;
+    }
+    
+    /* 어절 단위 자연스러운 줄바꿈 필수 규칙 */
+    h1, h2, h3, h4, h5, h6, .keep-all {
+      word-break: keep-all;
+      letter-spacing: -0.02em;
+    }
+
+    /* 말풍선 꼬리표 모티프 스타일 */
+    .bubble-tail-bottom {
+      position: relative;
+    }
+    .bubble-tail-bottom::after {
+      content: '';
+      position: absolute;
+      bottom: -8px;
+      left: 28px;
+      width: 0;
+      height: 0;
+      border-left: 8px solid transparent;
+      border-right: 8px solid transparent;
+      border-top: 8px solid currentColor;
+    }
+
+    .bubble-tail-right {
+      position: relative;
+    }
+    .bubble-tail-right::after {
+      content: '';
+      position: absolute;
+      right: -8px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 0;
+      height: 0;
+      border-top: 7px solid transparent;
+      border-bottom: 7px solid transparent;
+      border-left: 8px solid currentColor;
+    }
+
+    /* 부드러운 호버 및 플로팅 애니메이션 */
+    @keyframes floatSoft {
+      0%, 100% { transform: translateY(0px); }
+      50% { transform: translateY(-8px); }
+    }
+    .animate-float {
+      animation: floatSoft 4s ease-in-out infinite;
+    }
+
+    @keyframes pulseRing {
+      0% { transform: scale(0.95); opacity: 0.8; }
+      50% { transform: scale(1.1); opacity: 0.4; }
+      100% { transform: scale(0.95); opacity: 0.8; }
+    }
+    .pulse-dot {
+      animation: pulseRing 2s infinite;
+    }
+  </style>
+</head>
+<body class="flex flex-col min-h-screen">
+
+  <!-- ================= GNB 헤더 ================= -->
+  <header class="sticky top-0 z-50 bg-white/90 backdrop-blur-md border-b border-slate-100 transition-all">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-18 py-3.5 flex items-center justify-between">
+      <div class="flex items-center gap-8">
+        <a href="#" class="flex items-center gap-2.5 group">
+          <div class="w-10 h-10 rounded-2xl bg-brand-vivid flex items-center justify-center text-white shadow-md shadow-blue-500/25 group-hover:scale-105 transition">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+            </svg>
+          </div>
+          <div class="flex flex-col">
+            <span class="text-lg font-extrabold text-slate-900 tracking-tight flex items-center gap-1.5">
+              우정여행<span class="text-brand-vivid">&</span>더치페이
+            </span>
+            <span class="text-[10px] font-semibold text-slate-400 tracking-wider">SMART TRAVEL & PAY</span>
+          </div>
+        </a>
+
+        <!-- 네비게이션 메뉴 (짧은 한국어) -->
+        <nav class="hidden md:flex items-center gap-7 text-sm font-semibold text-slate-600">
+          <a href="#features" class="hover:text-brand-vivid transition">기능 소개</a>
+          <a href="#calculator" class="hover:text-brand-vivid transition">체험 계산기</a>
+          <a href="#reviews" class="hover:text-brand-vivid transition">도입 후기</a>
+          <a href="#security" class="hover:text-brand-vivid transition">안심 동기화</a>
+        </nav>
+      </div>
+
+      <div class="flex items-center gap-3">
+        <a href="/" class="text-sm font-bold text-slate-600 hover:text-slate-900 px-3 py-2 transition hidden sm:inline-block">
+          로그인
+        </a>
+        <a href="/" class="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-brand-vivid hover:bg-brand-600 text-white text-sm font-extrabold shadow-lg shadow-blue-500/25 hover:shadow-blue-500/40 hover:-translate-y-0.5 transition duration-200">
+          <span>무료로 시작하기</span>
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M14 5l7 7m0 0l-7 7m7-7H3"/>
+          </svg>
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- ================= 1. 히어로 섹션 (큰 약속 한 줄 + 무료 시작 버튼) ================= -->
+  <section class="relative pt-12 pb-20 lg:pt-20 lg:pb-32 overflow-hidden bg-gradient-to-b from-white via-pastel-blue to-white">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">
+      
+      <!-- 말풍선 뱃지 -->
+      <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-blue-50 border border-blue-200/80 text-brand-vivid text-xs sm:text-sm font-bold mb-6 shadow-sm">
+        <span class="flex h-2 w-2 rounded-full bg-brand-vivid pulse-dot"></span>
+        <span>여행 플래너와 1/N 정산이 만난 국산 SaaS</span>
+      </div>
+
+      <!-- 큰 약속 한 줄 (굵고 또렷한 고딕, keep-all 적용) -->
+      <h1 class="text-3xl sm:text-5xl lg:text-6xl font-black text-slate-900 leading-tight sm:leading-tight mb-6 max-w-4xl mx-auto">
+        누가 얼마 보낼지 고민 끝.<br>
+        <span class="text-brand-vivid underline decoration-blue-200 decoration-wavy underline-offset-8">여행 계획과 영수증 정산</span>을 하나로.
+      </h1>
+
+      <!-- 보조 설명 (다정한 존댓말) -->
+      <p class="text-base sm:text-xl text-slate-600 max-w-2xl mx-auto mb-10 leading-relaxed keep-all font-medium">
+        숙소, 바비큐 장보기, 고속도로 통행료까지 — 폰 하나로 함께 기록하면 최소 송금 횟수 알고리즘이 서로 얼굴 붉힐 일 없는 깔끔한 정산을 만들어 드립니다.
+      </p>
+
+      <!-- CTA 버튼 영역 -->
+      <div class="flex flex-col sm:flex-row items-center justify-center gap-4 mb-16">
+        <a href="/" class="w-full sm:w-auto inline-flex items-center justify-center gap-2.5 px-8 py-4 rounded-2xl bg-brand-vivid hover:bg-brand-600 text-white text-base sm:text-lg font-extrabold shadow-xl shadow-blue-500/30 hover:-translate-y-1 transition duration-200">
+          <span>0원으로 우리 여행 만들기</span>
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M13 7l5 5m0 0l-5 5m5-5H6"/>
+          </svg>
+        </a>
+        <a href="#calculator" class="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-4 rounded-2xl bg-white hover:bg-slate-50 text-slate-700 border border-slate-200 text-base font-bold shadow-sm transition">
+          <span>10초 만에 계산 체험하기</span>
+        </a>
+      </div>
+
+      <!-- 히어로 실제 사용 화면 캡처 목업 (말풍선 모티프 가미) -->
+      <div class="relative max-w-5xl mx-auto">
+        
+        <!-- 좌측 상단 말풍선 플로팅 칩 -->
+        <div class="hidden sm:flex absolute -top-6 -left-6 z-20 items-center gap-3 bg-white px-4 py-3 rounded-2xl shadow-xl border border-blue-100 animate-float text-slate-800">
+          <div class="w-8 h-8 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center font-bold text-sm">
+            ✓
+          </div>
+          <div class="text-left text-xs">
+            <p class="font-extrabold text-slate-900">용덕 님이 256,460원 결제</p>
+            <p class="text-slate-400">안면도 갯벌 체험비 · 3명 1/N 자동 분할</p>
+          </div>
+        </div>
+
+        <!-- 우측 상단 말풍선 플로팅 칩 -->
+        <div class="hidden sm:flex absolute -top-8 -right-6 z-20 items-center gap-3 bg-white px-4 py-3 rounded-2xl shadow-xl border border-blue-100 animate-float [animation-delay:1.5s] text-slate-800">
+          <div class="w-8 h-8 rounded-full bg-pink-100 text-pink-600 flex items-center justify-center font-bold text-sm">
+            💬
+          </div>
+          <div class="text-left text-xs">
+            <p class="font-extrabold text-slate-900">“정산 카톡 3초 만에 끝났어요!”</p>
+            <p class="text-slate-400">송금 계좌와 차액까지 한 번에 복사</p>
+          </div>
+        </div>
+
+        <!-- 메인 목업 카드 -->
+        <div class="bg-white rounded-3xl p-3 sm:p-5 shadow-2xl border border-slate-200/80 ring-8 ring-slate-100/60">
+          <div class="rounded-2xl bg-slate-900 p-4 sm:p-6 text-white text-left overflow-hidden">
+            <!-- 모바일/웹 시뮬레이션 헤더 바 -->
+            <div class="flex items-center justify-between pb-4 border-b border-slate-800 text-xs">
+              <div class="flex items-center gap-2 font-bold text-slate-300">
+                <span class="w-3 h-3 rounded-full bg-red-500"></span>
+                <span class="w-3 h-3 rounded-full bg-yellow-500"></span>
+                <span class="w-3 h-3 rounded-full bg-green-500"></span>
+                <span class="ml-2 font-mono text-slate-400">travel-dutch.vercel.app</span>
+              </div>
+              <div class="flex items-center gap-2">
+                <span class="px-2.5 py-1 rounded-full bg-emerald-500/20 text-emerald-400 font-extrabold text-[11px] flex items-center gap-1">
+                  <span class="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span>
+                  Supabase 실시간 클라우드 연결됨
+                </span>
+              </div>
+            </div>
+
+            <!-- 앱 뷰 내부 콘텐츠 -->
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 pt-6">
+              <!-- 컬럼 1: 일정 지도 요약 -->
+              <div class="bg-slate-800/80 rounded-2xl p-4 border border-slate-700/60 flex flex-col justify-between">
+                <div>
+                  <div class="flex items-center justify-between mb-3">
+                    <span class="text-xs text-brand-200 font-bold">DAY 1 일정 동선</span>
+                    <span class="text-[11px] bg-indigo-600 px-2 py-0.5 rounded text-white font-bold">태안 캠핑</span>
+                  </div>
+                  <h3 class="text-base font-bold text-white mb-2">안면도 갯벌 해루질 체험 & 오토 캠핑</h3>
+                  <p class="text-xs text-slate-400">인원 3명 (주연 🌸 · 혜림 🌟 · 용덕 🚀)</p>
+                </div>
+                <div class="mt-4 pt-3 border-t border-slate-700/60 flex items-center justify-between text-xs">
+                  <span class="text-slate-400">등록 장소 3곳</span>
+                  <span class="text-emerald-400 font-bold">카카오맵 연동 완료 →</span>
+                </div>
+              </div>
+
+              <!-- 컬럼 2: 총 지출 내역 -->
+              <div class="bg-slate-800/80 rounded-2xl p-4 border border-slate-700/60 flex flex-col justify-between">
+                <div>
+                  <div class="flex items-center justify-between mb-3">
+                    <span class="text-xs text-slate-400 font-bold">실시간 총 지출액</span>
+                    <span class="text-xs text-brand-vivid font-bold">총 7건 등록</span>
+                  </div>
+                  <div class="text-2xl sm:text-3xl font-black text-white">1,051,320<span class="text-base font-normal text-slate-300"> 원</span></div>
+                  <div class="flex items-center gap-1.5 mt-2 text-xs text-slate-300">
+                    <span class="px-2 py-0.5 rounded bg-amber-500/20 text-amber-300 font-semibold">식비 25.6만</span>
+                    <span class="px-2 py-0.5 rounded bg-sky-500/20 text-sky-300 font-semibold">체험 25.6만</span>
+                    <span class="px-2 py-0.5 rounded bg-purple-500/20 text-purple-300 font-semibold">마트 26.1만</span>
+                  </div>
+                </div>
+                <div class="mt-4 pt-3 border-t border-slate-700/60 flex items-center justify-between text-xs text-slate-400">
+                  <span>1인당 평균 부담금</span>
+                  <span class="text-white font-extrabold">350,440원</span>
+                </div>
+              </div>
+
+              <!-- 컬럼 3: 최소 송금 결과 (말풍선 모티프) -->
+              <div class="bg-gradient-to-br from-blue-950/80 to-slate-800/90 rounded-2xl p-4 border border-blue-500/40 flex flex-col justify-between">
+                <div>
+                  <div class="flex items-center justify-between mb-2">
+                    <span class="text-xs font-bold text-blue-300">💡 스마트 1/N 정산 결과</span>
+                    <span class="text-[11px] bg-emerald-500 text-slate-950 px-2 py-0.5 rounded font-black">2번 송금으로 완결</span>
+                  </div>
+                  <div class="space-y-2 mt-3 text-xs">
+                    <div class="p-2.5 rounded-xl bg-slate-900/90 border border-slate-700 flex items-center justify-between">
+                      <span class="font-bold text-pink-400">주연 ➔ 용덕</span>
+                      <span class="font-mono font-extrabold text-white">318,440원</span>
+                    </div>
+                    <div class="p-2.5 rounded-xl bg-slate-900/90 border border-slate-700 flex items-center justify-between">
+                      <span class="font-bold text-sky-400">혜림 ➔ 용덕</span>
+                      <span class="font-mono font-extrabold text-white">120,840원</span>
+                    </div>
+                  </div>
+                </div>
+                <div class="mt-3 text-[11px] text-blue-200 text-center font-bold">
+                  카카오페이 / 토스 링크 바로 복사 가능
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= 2. 고객사 로고 월 / 신뢰 장치 줄 ================= -->
+  <section class="py-12 border-y border-slate-100 bg-white">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+      <p class="text-xs sm:text-sm font-bold text-slate-400 uppercase tracking-wider mb-6">
+        이미 2,400개 이상의 동호회·학생회·가족 모임이 정산 스트레스 없이 여행하고 있습니다
+      </p>
+
+      <!-- 감각적인 심플 로고 월 (국산 SaaS 스타일) -->
+      <div class="flex flex-wrap items-center justify-center gap-8 sm:gap-14 opacity-60 grayscale hover:grayscale-0 transition-all duration-300">
+        <div class="flex items-center gap-2 font-black text-slate-800 text-base sm:text-lg">
+          <span class="w-6 h-6 rounded-lg bg-slate-800 text-white flex items-center justify-center text-xs">C</span>
+          캠핑클럽 코리아
+        </div>
+        <div class="flex items-center gap-2 font-black text-slate-800 text-base sm:text-lg">
+          <span class="w-6 h-6 rounded-lg bg-blue-600 text-white flex items-center justify-center text-xs">U</span>
+          대학 연합 MT 네트워크
+        </div>
+        <div class="flex items-center gap-2 font-black text-slate-800 text-base sm:text-lg">
+          <span class="w-6 h-6 rounded-lg bg-emerald-600 text-white flex items-center justify-center text-xs">J</span>
+          제주 한달살이 크루
+        </div>
+        <div class="flex items-center gap-2 font-black text-slate-800 text-base sm:text-lg">
+          <span class="w-6 h-6 rounded-lg bg-amber-500 text-white flex items-center justify-center text-xs">F</span>
+          부울경 패밀리 투어
+        </div>
+        <div class="flex items-center gap-2 font-black text-slate-800 text-base sm:text-lg">
+          <span class="w-6 h-6 rounded-lg bg-purple-600 text-white flex items-center justify-center text-xs">R</span>
+          주말 라이딩 & 러닝 크루
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= 3. 핵심 기능 소개 (그림과 텍스트 번갈아 소개) ================= -->
+  <section id="features" class="py-20 lg:py-28 bg-white">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      
+      <div class="text-center max-w-3xl mx-auto mb-20">
+        <span class="text-xs sm:text-sm font-extrabold text-brand-vivid tracking-wider uppercase">CORE FEATURES</span>
+        <h2 class="text-3xl sm:text-4xl font-extrabold text-slate-900 mt-2 mb-4">
+          여행 총무의 수고를 90% 줄여주는<br>
+          꼭 필요한 4가지 핵심 기능
+        </h2>
+        <p class="text-slate-600 text-base sm:text-lg keep-all">
+          복잡한 수식과 단체 채팅방 눈치 싸움은 그만. 스마트한 여행 경험을 위해 처음부터 끝까지 다정하게 챙겨드립니다.
+        </p>
+      </div>
+
+      <div class="space-y-24">
+        
+        <!-- 기능 1: 최소 송금 정산 알고리즘 (텍스트 좌, 그래픽 우) -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+          <div>
+            <div class="w-12 h-12 rounded-2xl bg-blue-100 text-brand-vivid flex items-center justify-center font-bold text-xl mb-6 shadow-sm">
+              01
+            </div>
+            <span class="text-xs font-bold text-brand-vivid bg-blue-50 px-3 py-1 rounded-full">최소 송금 최적화</span>
+            <h3 class="text-2xl sm:text-3xl font-extrabold text-slate-900 mt-3 mb-4">
+              “누가 누구한테 보내야 하지?”<br>
+              수십 번의 계좌 이체를 단 2~3번으로 압축
+            </h3>
+            <p class="text-slate-600 leading-relaxed mb-6 keep-all">
+              A가 장을 보고 B가 숙소를 예약하고 C가 기름값을 냈을 때, 이전에는 서로 주고받느라 정신이 없으셨죠? 
+              탐욕 알고리즘(Minimum Cash Flow) 기반으로 전체 그룹 내 총 송금 횟수를 수학적으로 가장 적게 만들어 드립니다.
+            </p>
+            <ul class="space-y-2.5 text-sm font-bold text-slate-700">
+              <li class="flex items-center gap-2">
+                <svg class="w-4 h-4 text-brand-vivid" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>
+                특정 항목(술·담배 등) 제외 인원 선택 1/N 지원
+              </li>
+              <li class="flex items-center gap-2">
+                <svg class="w-4 h-4 text-brand-vivid" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>
+                10원 단위 절사 및 공평한 잔여원 분배
+              </li>
+            </ul>
+          </div>
+          <div class="bg-pastel-blue rounded-3xl p-8 border border-blue-100 relative">
+            <!-- 시각화 카드 -->
+            <div class="bg-white rounded-2xl p-6 shadow-xl border border-slate-100">
+              <div class="flex items-center justify-between pb-4 border-b border-slate-100 mb-4">
+                <span class="text-xs font-bold text-slate-400">송금 복잡도 비교</span>
+                <span class="text-xs font-extrabold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded">75% 감소</span>
+              </div>
+              <div class="space-y-4">
+                <div class="p-3 rounded-xl bg-slate-50 border border-slate-200">
+                  <div class="flex justify-between text-xs text-slate-500 mb-1">
+                    <span>일반적인 정산 방식</span>
+                    <span class="text-rose-500 font-bold">총 8회 이체 필요 ❌</span>
+                  </div>
+                  <div class="h-2 rounded-full bg-rose-200 overflow-hidden">
+                    <div class="h-full bg-rose-500 w-full"></div>
+                  </div>
+                </div>
+                <div class="p-4 rounded-xl bg-blue-50/80 border border-blue-200">
+                  <div class="flex justify-between text-xs text-brand-vivid mb-1">
+                    <span class="font-bold">스마트 최적화 알고리즘</span>
+                    <span class="font-extrabold">단 2회 이체로 종료 ✅</span>
+                  </div>
+                  <div class="h-2 rounded-full bg-blue-200 overflow-hidden">
+                    <div class="h-full bg-brand-vivid w-1/4"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 기능 2: 실시간 클라우드 DB 연동 (그래픽 좌, 텍스트 우) -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+          <div class="order-2 lg:order-1 bg-pastel-mint rounded-3xl p-8 border border-emerald-100 relative">
+            <div class="bg-white rounded-2xl p-6 shadow-xl border border-slate-100 text-left">
+              <div class="flex items-center justify-between pb-3 border-b border-slate-100 mb-4">
+                <div class="flex items-center gap-2">
+                  <span class="w-3 h-3 rounded-full bg-emerald-500"></span>
+                  <span class="text-xs font-extrabold text-slate-800">Supabase PostgreSQL 동기화</span>
+                </div>
+                <span class="text-[11px] font-mono text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded">0.2초 갱신</span>
+              </div>
+              <div class="space-y-3 text-xs">
+                <div class="p-3 rounded-xl bg-slate-50 border border-slate-100 flex items-center justify-between">
+                  <span class="text-slate-600">📱 친구 핸드폰 화면</span>
+                  <span class="font-bold text-slate-900">새로고침 없이 영수증 자동 등장</span>
+                </div>
+                <div class="p-3 rounded-xl bg-slate-50 border border-slate-100 flex items-center justify-between">
+                  <span class="text-slate-600">💻 총무 PC 브라우저</span>
+                  <span class="font-bold text-slate-900">대화면 엑셀 스타일 빠른 입력</span>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="order-1 lg:order-2">
+            <div class="w-12 h-12 rounded-2xl bg-emerald-100 text-emerald-600 flex items-center justify-center font-bold text-xl mb-6 shadow-sm">
+              02
+            </div>
+            <span class="text-xs font-bold text-emerald-600 bg-emerald-50 px-3 py-1 rounded-full">실시간 자동 동기화</span>
+            <h3 class="text-2xl sm:text-3xl font-extrabold text-slate-900 mt-3 mb-4">
+              PC와 스마트폰 어디서나<br>
+              새로고침 없이 똑같이 보는 실시간 데이터
+            </h3>
+            <p class="text-slate-600 leading-relaxed mb-6 keep-all">
+              기기마다 화면이 다르면 총무도 친구들도 불안합니다. 글로벌 표준 PostgreSQL 클라우드 DB를 통해
+              한 사람이 지출을 등록하거나 일정을 옮기면 모두의 폰에 딜레이 없이 즉시 반영됩니다.
+            </p>
+            <div class="p-4 rounded-2xl bg-slate-50 border border-slate-200 text-xs text-slate-600 leading-relaxed">
+              💡 <strong>오프라인 안심 백업:</strong> 네트워크 연결이 불안정한 산골 캠핑장에서도 브라우저 캐시로 일정을 잃어버리지 않습니다.
+            </div>
+          </div>
+        </div>
+
+        <!-- 기능 3: 인터랙티브 여행 지도 (텍스트 좌, 그래픽 우) -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+          <div>
+            <div class="w-12 h-12 rounded-2xl bg-purple-100 text-purple-600 flex items-center justify-center font-bold text-xl mb-6 shadow-sm">
+              03
+            </div>
+            <span class="text-xs font-bold text-purple-600 bg-purple-50 px-3 py-1 rounded-full">지도 동선 시각화</span>
+            <h3 class="text-2xl sm:text-3xl font-extrabold text-slate-900 mt-3 mb-4">
+              영수증과 일정 동선이<br>
+              지도 위에서 하나로 이어집니다
+            </h3>
+            <p class="text-slate-600 leading-relaxed mb-6 keep-all">
+              “우리 아까 마트 어디 갔었지?”, “다음 목적지까지 차로 얼마나 걸려?”<br>
+              카카오맵/리플릿(Leaflet) 연동 지도 위에서 일자별 여행 핀을 콕콕 찍고, 이동 시간과 예상 경비를 한 번에 확인하세요.
+            </p>
+            <ul class="space-y-2.5 text-sm font-bold text-slate-700">
+              <li class="flex items-center gap-2">
+                <svg class="w-4 h-4 text-purple-600" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>
+                장소 검색 및 주소 자동 위·경도 변환
+              </li>
+              <li class="flex items-center gap-2">
+                <svg class="w-4 h-4 text-purple-600" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>
+                일정 순서 드래그 & 드롭 재배치
+              </li>
+            </ul>
+          </div>
+          <div class="bg-pastel-purple rounded-3xl p-8 border border-purple-100 relative">
+            <div class="bg-white rounded-2xl p-6 shadow-xl border border-slate-100">
+              <div class="h-44 rounded-xl bg-slate-100 border border-slate-200 flex flex-col items-center justify-center text-slate-400 relative overflow-hidden">
+                <div class="absolute inset-0 opacity-20 bg-[radial-gradient(#3b82f6_1px,transparent_1px)] [background-size:16px_16px]"></div>
+                <!-- 지도 마커 모티프 -->
+                <div class="relative z-10 flex flex-col items-center">
+                  <div class="px-3 py-1.5 rounded-full bg-brand-vivid text-white text-xs font-bold shadow-lg flex items-center gap-1.5">
+                    <span>📍</span> 태안 갯벌 캠핑장
+                  </div>
+                  <div class="w-1 h-4 bg-brand-vivid"></div>
+                  <div class="w-4 h-1.5 rounded-full bg-slate-300"></div>
+                </div>
+              </div>
+              <div class="mt-4 flex items-center justify-between text-xs">
+                <span class="font-bold text-slate-700">안면도 꽃지해수욕장 ➔ 자연휴양림</span>
+                <span class="text-purple-600 font-extrabold">차량 18분</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= 4. 인터랙티브 미니 체험기 (신뢰 장치 / 실제 사용성 체감) ================= -->
+  <section id="calculator" class="py-20 bg-pastel-sky border-y border-blue-100/60">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+      
+      <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-blue-100/80 text-brand-vivid text-xs font-bold mb-4">
+        <span>⚡ 3초 체험 위젯</span>
+      </div>
+      
+      <h2 class="text-3xl sm:text-4xl font-extrabold text-slate-900 mb-4">
+        직접 금액을 넣고 정산 결과를 확인해 보세요
+      </h2>
+      <p class="text-slate-600 mb-10 text-sm sm:text-base keep-all">
+        총 결제 금액과 여행 인원만 입력하면, 1인당 얼마인지 즉시 투명하게 계산해 드립니다.
+      </p>
+
+      <!-- 인터랙티브 카드 -->
+      <div class="bg-white rounded-3xl p-6 sm:p-10 shadow-2xl border border-blue-100 text-left">
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-8">
+          <div>
+            <label class="block text-xs font-bold text-slate-500 mb-2">여행 중 지출한 총 금액 (원)</label>
+            <div class="relative">
+              <input 
+                id="calcAmount" 
+                type="number" 
+                value="360000" 
+                step="10000"
+                class="w-full px-4 py-3.5 rounded-2xl bg-slate-50 border border-slate-200 font-black text-xl text-slate-900 focus:outline-none focus:ring-2 focus:ring-brand-vivid"
+              />
+              <span class="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 font-bold">원</span>
+            </div>
+          </div>
+          <div>
+            <label class="block text-xs font-bold text-slate-500 mb-2">함께 간 여행 인원</label>
+            <div class="grid grid-cols-4 gap-2">
+              <button onclick="setMembers(2)" class="calc-btn py-3 rounded-xl border border-slate-200 text-sm font-bold text-slate-700 hover:border-brand-vivid">2명</button>
+              <button onclick="setMembers(3)" class="calc-btn py-3 rounded-xl border-2 border-brand-vivid bg-blue-50 text-sm font-bold text-brand-vivid">3명</button>
+              <button onclick="setMembers(4)" class="calc-btn py-3 rounded-xl border border-slate-200 text-sm font-bold text-slate-700 hover:border-brand-vivid">4명</button>
+              <button onclick="setMembers(5)" class="calc-btn py-3 rounded-xl border border-slate-200 text-sm font-bold text-slate-700 hover:border-brand-vivid">5명</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- 계산 결과 말풍선 박스 -->
+        <div class="p-6 rounded-2xl bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-200/80 flex flex-col sm:flex-row items-center justify-between gap-4">
+          <div>
+            <span class="text-xs font-extrabold text-brand-vivid uppercase tracking-wide">RESULT · 1인당 부담 금액</span>
+            <div class="text-3xl sm:text-4xl font-black text-slate-900 mt-1">
+              <span id="calcResult">120,000</span> <span class="text-lg font-normal text-slate-600">원</span>
+            </div>
+          </div>
+          <button onclick="copyMockResult()" class="px-5 py-3 rounded-xl bg-brand-vivid hover:bg-brand-600 text-white font-extrabold text-sm shadow-md transition flex items-center gap-2">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3"/></svg>
+            <span id="copyBtnText">카톡 정산문구 복사</span>
+          </button>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ================= 5. 도입 후기 인용 (고객 증언으로 안심시키기) ================= -->
+  <section id="reviews" class="py-20 lg:py-28 bg-white">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      
+      <div class="text-center max-w-3xl mx-auto mb-16">
+        <span class="text-xs sm:text-sm font-extrabold text-brand-vivid tracking-wider uppercase">USER STORIES</span>
+        <h2 class="text-3xl sm:text-4xl font-extrabold text-slate-900 mt-2 mb-4">
+          실제 사용자분들이 남겨주신 생생한 후기
+        </h2>
+        <p class="text-slate-600 text-base keep-all">
+          여행 끝나고 며칠 동안 엑셀 붙잡고 있던 총무님들의 스트레스가 이렇게 사라졌습니다.
+        </p>
+      </div>
+
+      <!-- 후기 카드 3종 (말풍선 모티프) -->
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+        
+        <!-- 후기 1 -->
+        <div class="p-8 rounded-3xl bg-pastel-blue border border-blue-100 flex flex-col justify-between hover:shadow-xl hover:-translate-y-1 transition duration-200">
+          <div>
+            <div class="flex items-center gap-1 text-amber-400 mb-4">
+              ★★★★★
+            </div>
+            <p class="text-slate-700 text-sm leading-relaxed mb-6 font-medium keep-all">
+              “대학 동기 6명이서 2박 3일 글램핑 다녀왔는데, 장보기/기름값/숙소 결제자가 다 달라서 막막했거든요. 영수증 등록하자마자 단 3번의 이체로 정리되어 다들 감탄했습니다.”
+            </p>
+          </div>
+          <div class="flex items-center gap-3 pt-4 border-t border-blue-200/60">
+            <div class="w-10 h-10 rounded-full bg-blue-600 text-white font-bold flex items-center justify-center text-sm">
+              민수
+            </div>
+            <div>
+              <h4 class="text-xs font-extrabold text-slate-900">김민수 님</h4>
+              <p class="text-[11px] text-slate-500">대학생 연합 MT 총무</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- 후기 2 -->
+        <div class="p-8 rounded-3xl bg-pastel-mint border border-emerald-100 flex flex-col justify-between hover:shadow-xl hover:-translate-y-1 transition duration-200">
+          <div>
+            <div class="flex items-center gap-1 text-amber-400 mb-4">
+              ★★★★★
+            </div>
+            <p class="text-slate-700 text-sm leading-relaxed mb-6 font-medium keep-all">
+              “술 안 마시는 친구 2명은 주류비에서 쏙 빼고 정산할 수 있는 게 신의 한 수였어요. 누구 하나 서운함 없이 깔끔하게 떨어지니 다음 모임도 무조건 이걸로 쓰기로 했습니다.”
+            </p>
+          </div>
+          <div class="flex items-center gap-3 pt-4 border-t border-emerald-200/60">
+            <div class="w-10 h-10 rounded-full bg-emerald-600 text-white font-bold flex items-center justify-center text-sm">
+              지연
+            </div>
+            <div>
+              <h4 class="text-xs font-extrabold text-slate-900">이지연 님</h4>
+              <p class="text-[11px] text-slate-500">직장인 제주도 워크숍 기획자</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- 후기 3 -->
+        <div class="p-8 rounded-3xl bg-pastel-purple border border-purple-100 flex flex-col justify-between hover:shadow-xl hover:-translate-y-1 transition duration-200">
+          <div>
+            <div class="flex items-center gap-1 text-amber-400 mb-4">
+              ★★★★★
+            </div>
+            <p class="text-slate-700 text-sm leading-relaxed mb-6 font-medium keep-all">
+              “모바일이랑 PC가 실시간으로 동기화되니까, 차 안에서 제가 폰으로 결제내역 올리고 남편이 조수석에서 코스 확인하는 게 너무 편했어요. 정산 문구 복사 기능도 최고예요.”
+            </p>
+          </div>
+          <div class="flex items-center gap-3 pt-4 border-t border-purple-200/60">
+            <div class="w-10 h-10 rounded-full bg-purple-600 text-white font-bold flex items-center justify-center text-sm">
+              박주
+            </div>
+            <div>
+              <h4 class="text-xs font-extrabold text-slate-900">박주연 님</h4>
+              <p class="text-[11px] text-slate-500">부울경 주말 가족 캠핑 플래너</p>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= 6. 하단 전환 CTA 배너 ================= -->
+  <section class="py-20 lg:py-28 bg-slate-900 text-white relative overflow-hidden">
+    <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">
+      
+      <div class="inline-flex items-center gap-2 px-4 py-1 rounded-full bg-blue-500/20 text-blue-300 text-xs font-bold mb-6 border border-blue-400/30">
+        <span>🎉 별도 설치 없이 링크 하나로 바로 공유</span>
+      </div>
+
+      <h2 class="text-3xl sm:text-5xl font-black mb-6 leading-tight keep-all">
+        이번 주말 여행부터<br>
+        정산 스트레스와 영별하세요.
+      </h2>
+      
+      <p class="text-slate-300 text-base sm:text-lg max-w-xl mx-auto mb-10 keep-all font-medium">
+        회원가입 절차 없이 3초 만에 우리 모임 여행방을 만들고 친구들에게 링크를 보내보세요.
+      </p>
+
+      <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
+        <a href="/" class="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-8 py-4 rounded-2xl bg-brand-vivid hover:bg-brand-600 text-white text-lg font-extrabold shadow-xl shadow-blue-500/30 hover:scale-105 transition">
+          <span>무료로 여행 만들기 →</span>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= 7. 푸터 ================= -->
+  <footer class="bg-white border-t border-slate-200 py-12 text-slate-500 text-xs">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-6">
+      <div class="flex items-center gap-3">
+        <div class="w-6 h-6 rounded-lg bg-brand-vivid text-white flex items-center justify-center font-bold text-xs">
+          W
+        </div>
+        <span class="font-extrabold text-slate-900">우정여행&더치페이</span>
+        <span class="text-slate-300">|</span>
+        <span>대표자: 임원석</span>
+        <span class="text-slate-300">|</span>
+        <span>클라우드 인프라: Vercel & Supabase</span>
+      </div>
+      <p class="text-slate-400">
+        © 2026 TravelDutch Inc. All rights reserved. Made with friendly UX for seamless group travel.
+      </p>
+    </div>
+  </footer>
+
+  <!-- ================= 8. 채널톡 스타일 플로팅 챗봇 말풍선 위젯 ================= -->
+  <div class="fixed bottom-6 right-6 z-50 flex flex-col items-end">
+    
+    <!-- 말풍선 툴팁 힌트 -->
+    <div id="chatBubbleTip" class="mb-3 px-4 py-2.5 rounded-2xl bg-slate-900 text-white text-xs font-bold shadow-2xl border border-slate-700 flex items-center gap-2 animate-bounce">
+      <span>궁금한 점이 있으신가요? 💬</span>
+      <button onclick="document.getElementById('chatBubbleTip').style.display='none'" class="text-slate-400 hover:text-white">✕</button>
+    </div>
+
+    <!-- 플로팅 메인 챗 버튼 (채널톡 특유의 비비드 블루 원형 버튼) -->
+    <button onclick="toggleChatPopup()" class="w-14 h-14 rounded-full bg-brand-vivid hover:bg-brand-600 text-white flex items-center justify-center shadow-2xl shadow-blue-600/40 hover:scale-110 active:scale-95 transition-all duration-200 group">
+      <svg class="w-7 h-7 group-hover:rotate-12 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"/>
+      </svg>
+    </button>
+
+    <!-- 채널톡 스타일 팝업 모달창 (클릭 시 토글) -->
+    <div id="chatModal" class="hidden absolute bottom-18 right-0 w-80 sm:w-96 bg-white rounded-3xl shadow-2xl border border-slate-200 overflow-hidden text-left mb-3">
+      <div class="bg-brand-vivid p-5 text-white flex items-center justify-between">
+        <div class="flex items-center gap-3">
+          <div class="w-10 h-10 rounded-2xl bg-white/20 flex items-center justify-center font-bold text-lg">
+            ✈️
+          </div>
+          <div>
+            <h4 class="font-extrabold text-sm">더치페이 도우미봇</h4>
+            <p class="text-[11px] text-blue-100">보통 몇 분 내에 답변을 드려요</p>
+          </div>
+        </div>
+        <button onclick="toggleChatPopup()" class="p-1 rounded-lg hover:bg-white/20 text-white">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+        </button>
+      </div>
+
+      <div class="p-5 space-y-4 max-h-96 overflow-y-auto text-xs">
+        <div class="flex items-start gap-2.5">
+          <div class="w-7 h-7 rounded-full bg-blue-100 text-brand-vivid flex items-center justify-center font-bold text-xs shrink-0">
+            톡
+          </div>
+          <div class="p-3.5 rounded-2xl rounded-tl-none bg-slate-100 text-slate-800 leading-relaxed">
+            안녕하세요! 반가워요 😊<br>
+            <strong>우정여행&더치페이</strong>에 대해 궁금하신 점이 있으시면 편하게 눌러보세요!
+          </div>
+        </div>
+
+        <div class="space-y-2 pt-2">
+          <button onclick="replyChat('진짜 무료인가요?')" class="w-full text-left p-3 rounded-xl border border-slate-200 hover:border-brand-vivid hover:bg-blue-50/50 font-bold text-slate-700 transition">
+            👉 진짜 100% 무료로 쓸 수 있나요?
+          </button>
+          <button onclick="replyChat('정산 알고리즘 원리')" class="w-full text-left p-3 rounded-xl border border-slate-200 hover:border-brand-vivid hover:bg-blue-50/50 font-bold text-slate-700 transition">
+            👉 최소 송금 횟수는 어떻게 계산되나요?
+          </button>
+          <button onclick="replyChat('친구 초대 방법')" class="w-full text-left p-3 rounded-xl border border-slate-200 hover:border-brand-vivid hover:bg-blue-50/50 font-bold text-slate-700 transition">
+            👉 친구들도 앱을 설치해야 하나요?
+          </button>
+        </div>
+
+        <div id="chatAnswerArea" class="hidden p-3.5 rounded-2xl bg-blue-50 border border-blue-200 text-brand-700 leading-relaxed font-medium"></div>
+      </div>
+
+      <div class="p-3 bg-slate-50 border-t border-slate-100 text-center">
+        <a href="/" class="inline-block py-2 px-4 rounded-xl bg-brand-vivid text-white font-extrabold text-xs">
+          지금 바로 우리 여행 시작하기 →
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- 간단한 스크립트: 인터랙티브 체험기 및 챗봇 동작 -->
+  <script>
+    let currentMembers = 3;
+
+    function setMembers(count) {
+      currentMembers = count;
+      document.querySelectorAll('.calc-btn').forEach((btn, idx) => {
+        if (idx + 2 === count) {
+          btn.className = 'calc-btn py-3 rounded-xl border-2 border-brand-vivid bg-blue-50 text-sm font-bold text-brand-vivid';
+        } else {
+          btn.className = 'calc-btn py-3 rounded-xl border border-slate-200 text-sm font-bold text-slate-700 hover:border-brand-vivid';
+        }
+      });
+      calc();
+    }
+
+    function calc() {
+      const amount = parseInt(document.getElementById('calcAmount').value || 0, 10);
+      const perPerson = Math.round(amount / currentMembers);
+      document.getElementById('calcResult').innerText = perPerson.toLocaleString();
+    }
+
+    document.getElementById('calcAmount').addEventListener('input', calc);
+
+    function copyMockResult() {
+      const amount = parseInt(document.getElementById('calcAmount').value || 0, 10);
+      const perPerson = Math.round(amount / currentMembers);
+      const text = `[우정여행&더치페이 정산 알림]\n총 지출: ${amount.toLocaleString()}원 (${currentMembers}명)\n1인당 부담액: ${perPerson.toLocaleString()}원\n스마트 정산 완료! 확인 부탁드려요 🚀`;
+      
+      navigator.clipboard.writeText(text).then(() => {
+        const btnText = document.getElementById('copyBtnText');
+        btnText.innerText = '복사 완료! 카톡에 붙여넣으세요';
+        setTimeout(() => {
+          btnText.innerText = '카톡 정산문구 복사';
+        }, 2000);
+      });
+    }
+
+    function toggleChatPopup() {
+      const modal = document.getElementById('chatModal');
+      modal.classList.toggle('hidden');
+    }
+
+    function replyChat(type) {
+      const ans = document.getElementById('chatAnswerArea');
+      ans.classList.remove('hidden');
+      if (type.includes('무료')) {
+        ans.innerHTML = '네, 맞습니다! 가입 없이 0원으로 모든 여행 일정 등록과 1/N 정산, 카톡 영수증 공유 기능을 제한 없이 평생 무료로 이용하실 수 있습니다 😊';
+      } else if (type.includes('알고리즘')) {
+        ans.innerHTML = '탐욕 알고리즘(Minimum Cash Flow)을 사용하여, 그룹원 간의 차액을 상계 처리한 뒤 가장 적은 횟수로 모든 빚이 청산되도록 최적의 송금 경로를 자동 산출합니다 📊';
+      } else {
+        ans.innerHTML = '아니요, 앱 설치가 필요 없습니다! 웹 링크(URL)만 단체 카톡방에 공유하면 친구들도 폰 브라우저에서 바로 열람하고 함께 기록할 수 있어요 📱';
+      }
+    }
+  </script>
+</body>
+</html>
