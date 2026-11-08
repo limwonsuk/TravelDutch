@@ -11,7 +11,11 @@ export async function GET() {
     if (!record) {
       return NextResponse.json(null);
     }
-    return NextResponse.json(record.data);
+    return NextResponse.json(record.data, {
+      headers: {
+        'Cache-Control': 'no-store, no-cache, must-revalidate, proxy-revalidate, max-age=0',
+      },
+    });
   } catch (err) {
     console.error('Failed to fetch kids data from DB:', err);
     return NextResponse.json(null, { status: 500 });

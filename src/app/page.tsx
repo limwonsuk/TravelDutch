@@ -34,6 +34,7 @@ import {
   PlusCircle,
   CheckCircle2,
   X,
+  RefreshCw,
 } from "lucide-react";
 
 type GlobalMode = "TRAVEL_DUTCH" | "EDU_MODE" | "OUTING_MODE";
@@ -65,10 +66,14 @@ export default function HomePage() {
   const [newFamilyRegion, setNewFamilyRegion] = useState<string>("부산 해운대");
   const [newFirstChild, setNewFirstChild] = useState<string>("첫째 아이 (초1)");
 
+  const [isSyncing, setIsSyncing] = useState<boolean>(false);
+
   // Supabase 클라우드 DB 연동 fetchTrip (실패 시 local storage fallback)
   const fetchTrip = useCallback(async () => {
     try {
-      const res = await fetch("/api/trip");
+      const res = await fetch(`/api/trip?t=${Date.now()}`, {
+        cache: "no-store",
+      });
       if (res.ok) {
         const data: TripData = await res.json();
         setTrip(data);
@@ -85,11 +90,10 @@ export default function HomePage() {
   }, []);
 
   const refreshKidsDb = useCallback(async () => {
-    const localDb = loadKidsDb();
-    setKidsDb({ ...localDb });
-
     try {
-      const res = await fetch("/api/kids");
+      const res = await fetch(`/api/kids?t=${Date.now()}`, {
+        cache: "no-store",
+      });
       if (res.ok) {
         const cloudData = await res.json();
         if (cloudData && cloudData.families && cloudData.families.length > 0) {
@@ -97,23 +101,50 @@ export default function HomePage() {
             localStorage.setItem("travel_dutch_kids_hub_db_v3", JSON.stringify(cloudData));
           } catch {}
           setKidsDb(cloudData);
+          return;
         } else {
           // Cloud DB is empty: seed it with current local database
+          const localDb = loadKidsDb();
           await fetch("/api/kids", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(localDb),
           });
+          setKidsDb(localDb);
+          return;
         }
       }
     } catch (err) {
       console.warn("Kids cloud sync error:", err);
     }
+
+    const localDb = loadKidsDb();
+    setKidsDb({ ...localDb });
   }, []);
+
+  const triggerManualSync = async () => {
+    setIsSyncing(true);
+    await Promise.all([fetchTrip(), refreshKidsDb()]);
+    setTimeout(() => setIsSyncing(false), 500);
+  };
 
   useEffect(() => {
     fetchTrip();
     refreshKidsDb();
+
+    // 실시간 클라우드 DB 주기적 동기화 (모바일/PC 양방향 즉시 반영)
+    const pollInterval = setInterval(() => {
+      fetchTrip();
+      refreshKidsDb();
+    }, 4000);
+
+    const onFocus = () => {
+      fetchTrip();
+      refreshKidsDb();
+    };
+    window.addEventListener("focus", onFocus);
+    document.addEventListener("visibilitychange", onFocus);
+
     try {
       const savedFam = localStorage.getItem("kidslife_selected_family");
       const savedTheme = localStorage.getItem("kidslife_theme_mode") as
@@ -125,6 +156,12 @@ export default function HomePage() {
         setThemeMode(savedTheme);
       }
     } catch {}
+
+    return () => {
+      clearInterval(pollInterval);
+      window.removeEventListener("focus", onFocus);
+      document.removeEventListener("visibilitychange", onFocus);
+    };
   }, [fetchTrip, refreshKidsDb]);
 
   useEffect(() => {
@@ -331,6 +368,20 @@ export default function HomePage() {
                 <Sun className="w-3.5 h-3.5" /> 화이트
               </button>
             </div>
+
+            {/* 실시간 클라우드 DB 동기화 버튼 */}
+            <button
+              onClick={triggerManualSync}
+              title="Supabase 실시간 클라우드 DB 즉시 동기화"
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-emerald-950/80 border border-emerald-500/60 text-emerald-300 hover:bg-emerald-900 transition font-extrabold text-xs shadow"
+            >
+              <RefreshCw
+                className={`w-3.5 h-3.5 text-emerald-400 ${
+                  isSyncing ? "animate-spin" : ""
+                }`}
+              />
+              <span>실시간 동기화</span>
+            </button>
           </div>
         </div>
       </div>

@@ -143,7 +143,11 @@ export async function GET() {
       });
     }
 
-    return NextResponse.json(trip);
+    return NextResponse.json(trip, {
+      headers: {
+        'Cache-Control': 'no-store, no-cache, must-revalidate, proxy-revalidate, max-age=0',
+      },
+    });
   } catch (error) {
     console.error('Failed to fetch trip from Supabase database:', error);
     return NextResponse.json(
