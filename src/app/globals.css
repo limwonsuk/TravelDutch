@@ -1,5 +1,4 @@
 @import "leaflet/dist/leaflet.css";
-@import url("https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css");
 
 @tailwind base;
 @tailwind components;
@@ -7,34 +6,12 @@
 
 @layer base {
   body {
-    @apply bg-white text-slate-800 antialiased min-h-screen;
-    font-family: "Pretendard", -apple-system, BlinkMacSystemFont, system-ui, Roboto, sans-serif;
-  }
-
-  h1, h2, h3, h4, h5, h6, p, span, button, a {
-    word-break: keep-all;
-    letter-spacing: -0.015em;
+    @apply bg-slate-50 text-slate-800 antialiased min-h-screen;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
   }
 }
 
-/* 채널톡 스타일 말풍선 모티프 */
-.speech-bubble {
-  position: relative;
-  border-radius: 20px;
-}
-.speech-bubble-tail-bottom::after {
-  content: '';
-  position: absolute;
-  bottom: -6px;
-  left: 24px;
-  width: 0;
-  height: 0;
-  border-left: 6px solid transparent;
-  border-right: 6px solid transparent;
-  border-top: 6px solid currentColor;
-}
-
-/* Custom Leaflet Marker - 채널톡 비비드 블루(#1D68FE) */
+/* Custom Leaflet Marker */
 .custom-marker {
   background: transparent;
   border: none;
@@ -44,13 +21,13 @@
   width: 32px;
   height: 32px;
   border-radius: 50% 50% 50% 0;
-  background: #1D68FE;
+  background: #4f46e5;
   position: absolute;
   transform: rotate(-45deg);
   left: 50%;
   top: 50%;
   margin: -20px 0 0 -16px;
-  box-shadow: 0 4px 12px -1px rgba(29, 104, 254, 0.45);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.2);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -60,7 +37,7 @@
 
 .custom-marker-pin:hover {
   transform: rotate(-45deg) scale(1.15);
-  background: #1555db;
+  background: #4338ca;
 }
 
 .custom-marker-label {
@@ -119,9 +96,8 @@
 
 .travel-dark .bg-indigo-50,
 .travel-dark .bg-indigo-50\/50,
-.travel-dark .bg-indigo-50\/60,
-.travel-dark .bg-blue-50 {
-  background-color: rgba(29, 104, 254, 0.18) !important;
+.travel-dark .bg-indigo-50\/60 {
+  background-color: rgba(79, 70, 229, 0.18) !important;
 }
 
 .travel-dark .bg-emerald-50,
@@ -165,9 +141,8 @@
 
 .travel-dark .text-indigo-700,
 .travel-dark .text-indigo-800,
-.travel-dark .text-indigo-900,
-.travel-dark .text-blue-600 {
-  color: #60a5fa !important;
+.travel-dark .text-indigo-900 {
+  color: #a5b4fc !important;
 }
 
 .travel-dark .text-emerald-700,
@@ -239,11 +214,11 @@
 }
 
 .theme-light .text-\[\#d5ff00\] {
-  color: #1D68FE !important;
+  color: #2563eb !important;
 }
 
 .theme-light .bg-\[\#d5ff00\] {
-  background-color: #1D68FE !important;
+  background-color: #2563eb !important;
   color: #ffffff !important;
 }
 

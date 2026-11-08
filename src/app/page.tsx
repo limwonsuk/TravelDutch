@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect, useCallback, useMemo } from "react";
 import Header from "@/components/Header";
+import LandingView from "@/components/LandingView";
 import MapView from "@/components/MapView";
 import DutchPayView from "@/components/DutchPayView";
 import { TripData } from "@/types";
@@ -38,12 +39,12 @@ import {
   MessageCircle,
 } from "lucide-react";
 
-type GlobalMode = "TRAVEL_DUTCH" | "EDU_MODE" | "OUTING_MODE";
+type GlobalMode = "LANDING" | "TRAVEL_DUTCH" | "EDU_MODE" | "OUTING_MODE";
 type KidsSubTab = 1 | 2 | 3 | 4 | 5 | 6;
 
 export default function HomePage() {
   // 최상단 3대 메인 모드: [우정여행&더치페이] | [학원·간트차트 & 사교육비] | [부산·경남·경북 나들이]
-  const [globalMode, setGlobalMode] = useState<GlobalMode>("TRAVEL_DUTCH");
+  const [globalMode, setGlobalMode] = useState<GlobalMode>("LANDING");
 
   // 1) 기존 우정여행 & 더치페이 상태
   const [trip, setTrip] = useState<TripData | null>(null);
@@ -256,6 +257,12 @@ export default function HomePage() {
     setShowFamilyGateModal(false);
   };
 
+  
+  // 0) 랜딩 페이지 모드일 때는 채널톡 스타일 메인 랜딩 1페이지 렌더링
+  if (globalMode === "LANDING") {
+    return <LandingView onStartApp={() => setGlobalMode("TRAVEL_DUTCH")} />;
+  }
+
   if (loading || !trip || !kidsDb) {
     return (
       <div className="min-h-screen bg-slate-50 flex flex-col items-center justify-center p-4">
@@ -283,6 +290,14 @@ export default function HomePage() {
         <div className="max-w-7xl mx-auto px-3 sm:px-6 py-3 flex flex-wrap items-center justify-between gap-3">
           {/* 채널톡 스타일: 상단 3대 메인 모드 버튼 */}
           <div className="flex flex-wrap items-center gap-2">
+            
+            <button
+              onClick={() => switchGlobalMode("LANDING")}
+              className="px-3.5 py-2 rounded-xl text-xs sm:text-sm font-extrabold flex items-center gap-1.5 transition border bg-slate-800/90 border-slate-700 text-slate-300 hover:text-white"
+            >
+              <span>💬 소개(랜딩)</span>
+            </button>
+
             <button
               onClick={() => switchGlobalMode("TRAVEL_DUTCH")}
               className={`px-4 py-2 rounded-2xl text-xs sm:text-sm font-black flex items-center gap-2 transition ${
@@ -527,39 +542,19 @@ export default function HomePage() {
           3) OUTING_MODE: [부산·경남·경북 나들이]
           ========================================================= */}
       {globalMode === "TRAVEL_DUTCH" ? (
-        <div className="flex-1 flex flex-col bg-white text-slate-800">
-          
-
-          {/* 채널톡 스타일: SaaS 신뢰 장치 & 고객사 로고 줄 */}
-          <div className="bg-gradient-to-b from-blue-50/60 via-white to-white py-5 border-b border-slate-100">
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-              <div className="flex flex-col md:flex-row items-center justify-between gap-4">
-                <div className="text-center md:text-left">
-                  <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-100/70 text-[#1D68FE] text-xs font-black mb-1.5">
-                    <span className="w-2 h-2 rounded-full bg-[#1D68FE] animate-pulse"></span>
-                    <span>국산 스마트 여행 SaaS 정석</span>
-                  </div>
-                  <h2 className="text-lg sm:text-xl font-black text-slate-900 tracking-tight">
-                    누가 얼마 보낼지 고민 끝. 여행 계획과 영수증 정산을 하나로.
-                  </h2>
-                </div>
-                
-                {/* 신뢰 장치: 협력 모임 로고 줄 */}
-                <div className="flex items-center gap-3 text-xs font-bold text-slate-500 opacity-80 flex-wrap justify-center">
-                  <span className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-white border border-slate-200/90 shadow-2xs text-slate-700">
-                    🏕️ 캠핑클럽 코리아
-                  </span>
-                  <span className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-white border border-slate-200/90 shadow-2xs text-slate-700">
-                    🎓 대학연합 MT 네트워크
-                  </span>
-                  <span className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-white border border-slate-200/90 shadow-2xs text-slate-700">
-                    🌴 제주도 워크숍 크루
-                  </span>
-                </div>
-              </div>
-            </div>
-          </div>
-
+        <div
+          className={`flex-1 flex flex-col transition-colors duration-200 ${
+            themeMode === "dark"
+              ? "travel-dark bg-[#101013] text-zinc-100"
+              : "travel-light bg-slate-50 text-slate-800"
+          }`}
+        >
+          <Header
+            trip={trip}
+            activeTab={activeTravelTab}
+            setActiveTab={setActiveTravelTab}
+            onRefresh={fetchTrip}
+          />
           <main className="flex-1 pb-12">
             {activeTravelTab === "itinerary" ? (
               <MapView trip={trip} onRefresh={fetchTrip} />
